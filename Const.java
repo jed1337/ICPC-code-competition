@@ -25,15 +25,15 @@ public class Const {
   public static final int GROUND_SMB = 9;    // A blue Snowman in this space
   
   /** Constants for the things a child can be holding */
-  public static final int HOLD_EMPTY = 0;    // Child is holding nothing
-  public static final int HOLD_P1 = 1;       // Child is holding one unit of powdered snow
-  public static final int HOLD_P2 = 2;       // Child is holding two units of powdered snow
-  public static final int HOLD_P3 = 3;       // Child is holding three units of powdered snow
-  public static final int HOLD_S1 = 4;       // Child is holding one small snowball.
-  public static final int HOLD_S2 = 5;       // Child is holding two small snowballs.
-  public static final int HOLD_S3 = 6;       // Child is holding three small snowballs.
-  public static final int HOLD_M = 7;        // Child is holding one medium snowball.
-  public static final int HOLD_L = 8;        // Child is holding one large snowball.
+  public static final int HOLD_EMPTY = 0;    // [a] Child is holding nothing
+  public static final int HOLD_P1 = 1;       // [b] Child is holding one unit of powdered snow
+  public static final int HOLD_P2 = 2;       // [c] Child is holding two units of powdered snow
+  public static final int HOLD_P3 = 3;       // [d] Child is holding three units of powdered snow
+  public static final int HOLD_S1 = 4;       // [e] Child is holding one small snowball.
+  public static final int HOLD_S2 = 5;       // [f] Child is holding two small snowballs.
+  public static final int HOLD_S3 = 6;       // [g] Child is holding three small snowballs.
+  public static final int HOLD_M = 7;        // [h] Child is holding one medium snowball.
+  public static final int HOLD_L = 8;        // [i] Child is holding one large snowball.
 
   /** Constant for the red player color */
   public static final int RED = 0;

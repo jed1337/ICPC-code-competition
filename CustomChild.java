@@ -64,8 +64,9 @@ public class CustomChild extends Child{
     }
 
     public Move chooseMove() {
-        if (dazed > 0)
+        if (turnsDazed > 0) {
             return new Move();
+        }
 
         if (state == 0) {
             // Not building a snowman.
@@ -74,12 +75,12 @@ public class CustomChild extends Child{
             // We should drop it.
             if (holding != Const.HOLD_EMPTY &&
                     pos.y < Const.MAP_SIZE - 1 &&
-                    world.getHeight()[pos.x][pos.y + 1] <= Const.MAX_PILE - 3) {
+                    world.getSnowHeight()[pos.x][pos.y + 1] <= Const.MAX_PILE - 3) {
                 return new Move("drop", pos.x, pos.y + 1);
             }
 
             // Find the nearest neighbor.
-            int nearDist = 1000;
+            int nearDist = Integer.MAX_VALUE;
             for (int i = 0; i < Const.MAP_SIZE; i++) {
                 for (int j = 0; j < Const.MAP_SIZE; j++) {
                     if ((i != pos.x || j != pos.y) &&
@@ -104,8 +105,8 @@ public class CustomChild extends Child{
                     pos.y < Const.MAP_SIZE - 1 &&
                     world.getGround()[pos.x + 1][pos.y] == Const.GROUND_EMPTY &&
                     world.getGround()[pos.x + 1][pos.y + 1] == Const.GROUND_EMPTY &&
-                    world.getHeight()[pos.x + 1][pos.y] >= 3 &&
-                    world.getHeight()[pos.x + 1][pos.y + 1] >= 3 &&
+                    world.getSnowHeight()[pos.x + 1][pos.y] >= 3 &&
+                    world.getSnowHeight()[pos.x + 1][pos.y + 1] >= 3 &&
                     holding == Const.HOLD_EMPTY) {
                 // Start trying to build a snowman.
                 state = 1;

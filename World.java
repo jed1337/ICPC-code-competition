@@ -17,7 +17,7 @@ public class World {
     private int[] score = new int[2];
 
     /** Current snow height in each cell. */
-    private int[][] height = new int[Const.MAP_SIZE][Const.MAP_SIZE];
+    private int[][] snowHeight = new int[Const.MAP_SIZE][Const.MAP_SIZE];
 
     /** Contents of each cell. */
     private int[][] ground = new int[Const.MAP_SIZE][Const.MAP_SIZE];
@@ -25,8 +25,8 @@ public class World {
     /** List of children on the field, half for each team. */
     private Child[] childList = new Child[2 * Const.CHILD_COUNT];
 
-    public int[][] getHeight() {
-        return height;
+    public int[][] getSnowHeight() {
+        return snowHeight;
     }
 
     public int[][] getGround() {
@@ -36,7 +36,7 @@ public class World {
     public void run() {
         for (int i = 0; i < childList.length; i++) {
             if (i < Const.CHILD_COUNT) {
-                childList[i] = new SnowmanMaker(this);
+                childList[i] = new CustomChild(this);
             } else {
                 childList[i] = new Child(this);
             }
@@ -76,7 +76,7 @@ public class World {
                 // Can we see this cell?
                 token = in.next();
                 if (token.charAt(0) == '*') {
-                    height[i][j] = -1;
+                    snowHeight[i][j] = -1;
                     ground[i][j] = -1;
                 }
                 /*
@@ -93,7 +93,7 @@ public class World {
                  * ground = 8
                  */
                 else {
-                    height[i][j] = token.charAt(0) - '0';
+                    snowHeight[i][j] = token.charAt(0) - '0';
                     ground[i][j] = token.charAt(1) - 'a';
                 }
             }
@@ -118,15 +118,16 @@ public class World {
                 // Compute child color based on it's index.
                 c.color = (i < Const.CHILD_COUNT ? Const.RED : Const.BLUE);
 
-                // Read the stance, what the child is holding and how much
-                // longer he's dazed.
+                // Read the stance. S = stand, C = crouch
                 token = in.next();
                 c.standing = token.equals("S");
 
+                // What is the child holding
                 token = in.next();
                 c.holding = token.charAt(0) - 'a';
 
-                c.dazed = in.nextInt();
+                // How much longer is he dazed
+                c.turnsDazed = in.nextInt();
             }
         }
     }

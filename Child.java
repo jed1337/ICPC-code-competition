@@ -20,7 +20,7 @@ public class Child {
     int holding;
 
     /**How many more turns this child is dazed.*/
-    int dazed;
+    int turnsDazed;
 
     /**We pass the World so that we have access to the game variables*/
     public Child(World world) {
