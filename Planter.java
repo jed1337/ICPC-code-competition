@@ -271,11 +271,13 @@ public class Planter {
     }
 
     public void run() {
-        for (int i = 0; i < childList.length; i++)
-            if (i < Const.CHILD_COUNT)
+        for (int i = 0; i < childList.length; i++) {
+            if (i < Const.CHILD_COUNT) {
                 childList[i] = new SnowmanMaker();
-            else
+            } else {
                 childList[i] = new Child();
+            }
+        }
 
         // Scanner to parse input from the game engine.
         Scanner in = new Scanner(System.in);
@@ -284,9 +286,6 @@ public class Planter {
         Point[] runTarget = new Point[Const.CHILD_COUNT];
         for (int i = 0; i < runTarget.length; i++)
             runTarget[i] = new Point();
-
-        // How long the child has left to run toward its destination.
-        int[] runTimer = new int[Const.CHILD_COUNT];
 
         // Keep reading states until the game ends.
         int turnNum = in.nextInt();
@@ -305,7 +304,21 @@ public class Planter {
                     if (token.charAt(0) == '*') {
                         height[i][j] = -1;
                         ground[i][j] = -1;
-                    } else {
+                    }
+                    /**
+                     * e.g. token = 6i
+                     * token.charAt(0) = '6', ascii value = 54
+                     * token.charAt(1) = 'i' ascii value = 105
+                     * '0' ascii value = 48
+                     * 'a' ascii value = 97
+                     *
+                     * height = 54 - 48
+                     * height = 6
+                     *
+                     * ground = 105 - 97
+                     * ground = 8
+                     */
+                    else {
                         height[i][j] = token.charAt(0) - '0';
                         ground[i][j] = token.charAt(1) - 'a';
                     }
@@ -367,7 +380,7 @@ public class Planter {
     }
 
     public static void main(String[] args) {
-        RandomWalk randomWalk = new RandomWalk();
-        randomWalk.run();
+        Planter planter = new Planter();
+        planter.run();
     }
 }
