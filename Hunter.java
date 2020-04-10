@@ -68,20 +68,26 @@ public class Hunter {
                 if (c.pos.y != target.y) {
                     // Run diagonally.
                     m.action = "run";
-                    m.dest = new Point(c.pos.x + clamp(target.x - c.pos.x, -1, 1),
-                            c.pos.y + clamp(target.y - c.pos.y, -1, 1));
+                    m.dest = new Point(
+                            c.pos.x + clamp(target.x - c.pos.x, -1, 1),
+                            c.pos.y + clamp(target.y - c.pos.y, -1, 1)
+                    );
                 } else {
                     // Run left or right
                     m.action = "run";
-                    m.dest = new Point(c.pos.x + clamp(target.x - c.pos.x, -2, 2),
-                            c.pos.y);
+                    m.dest = new Point(
+                            c.pos.x + clamp(target.x - c.pos.x, -2, 2),
+                            c.pos.y
+                    );
                 }
             } else {
                 if (c.pos.y != target.y) {
                     // Run up or down.
                     m.action = "run";
-                    m.dest = new Point(c.pos.x,
-                            c.pos.y + clamp(target.y - c.pos.y, -2, 2));
+                    m.dest = new Point(
+                            c.pos.x,
+                            c.pos.y + clamp(target.y - c.pos.y, -2, 2)
+                    );
                 }
             }
         } else {
@@ -89,14 +95,18 @@ public class Hunter {
             if (c.pos.x != target.x) {
                 // crawl left or right
                 m.action = "crawl";
-                m.dest = new Point(c.pos.x + clamp(target.x - c.pos.x, -1, 1),
-                        c.pos.y);
+                m.dest = new Point(
+                        c.pos.x + clamp(target.x - c.pos.x, -1, 1),
+                        c.pos.y
+                );
             } else {
                 if (c.pos.y != target.y) {
                     // crawl up or down.
                     m.action = "crawl";
-                    m.dest = new Point(c.pos.x,
-                            c.pos.y + clamp(target.y - c.pos.y, -1, 1));
+                    m.dest = new Point(
+                            c.pos.x,
+                            c.pos.y + clamp(target.y - c.pos.y, -1, 1)
+                    );
                 }
             }
         }

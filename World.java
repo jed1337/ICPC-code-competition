@@ -33,13 +33,18 @@ public class World {
         return ground;
     }
 
+    public Child[] getChildList() {
+        return childList;
+    }
+
     public void run() {
-        for (int i = 0; i < childList.length; i++) {
-            if (i < Const.CHILD_COUNT) {
-                childList[i] = new CustomChild(this);
-            } else {
-                childList[i] = new Child(this);
-            }
+        childList[0] = new HunterChild(this);
+        childList[1] = new HunterChild(this);
+        childList[2] = new HunterChild(this);
+        childList[3] = new CustomChild(this);
+
+        for (int i = Const.CHILD_COUNT; i < childList.length; i++) {
+            childList[i] = new Child(this);
         }
 
         // Scanner to parse input from the game engine.

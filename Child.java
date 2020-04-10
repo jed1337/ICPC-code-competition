@@ -35,4 +35,58 @@ public class Child {
     public Move chooseMove() {
         return new Move();
     }
+
+    /** Return a move to get this child closer to target. */
+    protected Move moveToward(Point target) {
+        if (standing) {
+            // Run to the destination
+            if (pos.x != target.x) {
+                if (pos.y != target.y) {
+                    // Run diagonally.
+                    return new Move("run",
+                            pos.x + clamp(target.x - pos.x, -1, 1),
+                            pos.y + clamp(target.y - pos.y, -1, 1)
+                    );
+                }
+                // Run left or right
+                return new Move("run",
+                        pos.x + clamp(target.x - pos.x, -2, 2),
+                        pos.y
+                );
+            }
+
+            if (pos.y != target.y)
+                // Run up or down.
+                return new Move("run",
+                        pos.x,
+                        pos.y + clamp(target.y - pos.y, -2, 2)
+                );
+        } else {
+            // Crawl to the destination
+            if (pos.x != target.x)
+                // crawl left or right
+                return new Move("crawl",
+                        pos.x + clamp(target.x - pos.x, -1, 1),
+                        pos.y
+                );
+
+            if (pos.y != target.y)
+                // crawl up or down.
+                return new Move("crawl",
+                        pos.x,
+                        pos.y + clamp(target.y - pos.y, -1, 1));
+        }
+
+        // Nowhere to move, just return the idle move.
+        return new Move();
+    }
+
+    /** Return the value of x, clamped to the [ a, b ] range. */
+    protected int clamp(int x, int a, int b) {
+        if (x < a)
+            return a;
+        if (x > b)
+            return b;
+        return x;
+    }
 }
