@@ -23,17 +23,17 @@ public class Planter {
   /**
    * Current snow height in each cell.
    */
-  private int[][] height = new int[Const.SIZE][Const.SIZE];
+  private int[][] height = new int[Const.MAP_SIZE][Const.MAP_SIZE];
 
   /**
    * Contents of each cell.
    */
-  private int[][] ground = new int[Const.SIZE][Const.SIZE];
+  private int[][] ground = new int[Const.MAP_SIZE][Const.MAP_SIZE];
 
   /**
    * List of children on the field, half for each team.
    */
-  private Child[] cList = new Child[2 * Const.CCOUNT];
+  private Child[] cList = new Child[2 * Const.CHILD_COUNT];
 
   /**
    * Source of randomness for this player.
@@ -187,15 +187,15 @@ public class Planter {
         // If we didn't get to finish the last snowman, maybe we're holding shomething.
         // We should drop it.
         if (holding != Const.HOLD_EMPTY &&
-            pos.y < Const.SIZE - 1 &&
+            pos.y < Const.MAP_SIZE - 1 &&
             height[pos.x][pos.y + 1] <= Const.MAX_PILE - 3) {
           return new Move("drop", pos.x, pos.y + 1);
         }
 
         // Find the nearest neighbor.
         int nearDist = 1000;
-        for (int i = 0; i < Const.SIZE; i++)
-          for (int j = 0; j < Const.SIZE; j++)
+        for (int i = 0; i < Const.MAP_SIZE; i++)
+          for (int j = 0; j < Const.MAP_SIZE; j++)
             if ((i != pos.x || j != pos.y) &&
                 (ground[i][j] == GROUND_CHILD ||
                     ground[i][j] == Const.GROUND_SMR)) {
@@ -212,8 +212,8 @@ public class Planter {
         // Are we far from other things, is the ground empty
         // and do we have enough snow to build a snowman.
         if (nearDist > 5 * 5 &&
-            pos.x < Const.SIZE - 1 &&
-            pos.y < Const.SIZE - 1 &&
+            pos.x < Const.MAP_SIZE - 1 &&
+            pos.y < Const.MAP_SIZE - 1 &&
             ground[pos.x + 1][pos.y] == Const.GROUND_EMPTY &&
             ground[pos.x + 1][pos.y + 1] == Const.GROUND_EMPTY &&
             height[pos.x + 1][pos.y] >= 3 &&
@@ -243,7 +243,7 @@ public class Planter {
       while (runTimer <= 0 ||
           runTarget.equals(pos)) {
         // Pick somewhere to run, omit the top and righmost edges.
-        runTarget.setLocation(rnd.nextInt(Const.SIZE - 1),  rnd.nextInt(Const.SIZE - 1));
+        runTarget.setLocation(rnd.nextInt(Const.MAP_SIZE - 1),  rnd.nextInt(Const.MAP_SIZE - 1));
         runTimer = 1 + rnd.nextInt(14);
       }
 
@@ -254,7 +254,7 @@ public class Planter {
 
   public void run() {
     for (int i = 0; i < cList.length; i++) {
-      if (i < Const.CCOUNT) {
+      if (i < Const.CHILD_COUNT) {
         cList[i] = new SnowmanMaker();
       } else {
         cList[i] = new Child();
@@ -265,13 +265,13 @@ public class Planter {
     Scanner in = new Scanner(System.in);
 
     // Random destination for each player.
-    Point[] runTarget = new Point[Const.CCOUNT];
+    Point[] runTarget = new Point[Const.CHILD_COUNT];
     for (int i = 0; i < runTarget.length; i++) {
       runTarget[i] = new Point();
     }
 
     // How long the child has left to run toward its destination.
-    int[] runTimer = new int[Const.CCOUNT];
+    int[] runTimer = new int[Const.CHILD_COUNT];
 
     // Keep reading states until the game ends.
     int turnNum = in.nextInt();
@@ -290,7 +290,7 @@ public class Planter {
 
       // Mark all the children in the map, so they are easy to
       // look up.
-      for (int i = 0; i < Const.CCOUNT * 2; i++) {
+      for (int i = 0; i < Const.CHILD_COUNT * 2; i++) {
         Child c = cList[i];
         if (c.pos.x >= 0) {
           ground[c.pos.x][c.pos.y] = GROUND_CHILD;
@@ -298,7 +298,7 @@ public class Planter {
       }
 
       // Decide what each child should do
-      for (int i = 0; i < Const.CCOUNT; i++) {
+      for (int i = 0; i < Const.CHILD_COUNT; i++) {
         Move m = cList[i].chooseMove();
 
         /** Write out the child's move */
@@ -315,8 +315,8 @@ public class Planter {
 
   private void readCurrentMap(Scanner in) {
     String token;
-    for (int i = 0; i < Const.SIZE; i++) {
-      for (int j = 0; j < Const.SIZE; j++) {
+    for (int i = 0; i < Const.MAP_SIZE; i++) {
+      for (int j = 0; j < Const.MAP_SIZE; j++) {
         // Can we see this cell?
         token = in.next();
         if (token.charAt(0) == '*') {
@@ -332,7 +332,7 @@ public class Planter {
 
   private void readChildrenStates(Scanner in) {
     String token;
-    for (int i = 0; i < Const.CCOUNT * 2; i++) {
+    for (int i = 0; i < Const.CHILD_COUNT * 2; i++) {
       Child c = cList[i];
 
       // Can we see this child?
@@ -346,7 +346,7 @@ public class Planter {
         c.pos.y = in.nextInt();
 
         // Compute child color based on it's index.
-        c.color = (i < Const.CCOUNT ? Const.RED : Const.BLUE);
+        c.color = (i < Const.CHILD_COUNT ? Const.RED : Const.BLUE);
 
         // Read the stance, what the child is holding and how much
         // longer he's dazed.
