@@ -6,12 +6,11 @@
 // ICPC Challenge
 // Sturgill, Baylor University
 
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
 import java.awt.Point;
 
-public class Planter {
+public class OriginalPlanter {
   // Constant used to mark child locations in the map.
   public static final int GROUND_CHILD = 10;
 
@@ -362,7 +361,7 @@ public class Planter {
   }
 
   public static void main(String[] args) {
-    Planter planter = new Planter();
+    OriginalPlanter planter = new OriginalPlanter();
     planter.run();
   }
 }

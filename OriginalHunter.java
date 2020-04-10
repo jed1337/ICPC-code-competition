@@ -10,7 +10,7 @@ import java.util.Scanner;
 import java.util.Random;
 import java.awt.Point;
 
-public class Hunter {
+public class OriginalHunter {
     // Constant used to mark child locations in the map.
     public static final int GROUND_CHILD = 10;
 
