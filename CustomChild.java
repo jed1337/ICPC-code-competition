@@ -5,7 +5,7 @@ import java.util.Random;
  * Child that moves away from other children and
  * then builds a snowman.
  */
-public class SnowmanMaker extends Child{
+public class CustomChild extends Child{
     /** Source of randomness for this player. */
     static Random rnd = new Random();
 
@@ -18,7 +18,7 @@ public class SnowmanMaker extends Child{
     /** How many more turns is this child going to run toward the target. */
     int runTimer;
 
-    public SnowmanMaker(Planter planter) {
+    public CustomChild(Planter planter) {
         super(planter);
     }
 
