@@ -1,0 +1,7 @@
+
+jsquid:S1192w"GDefine a constant instead of duplicating this literal "pickup" 6 times.(ÕÚıÁÿÿÿÿÿ8©ÓìË”.
+qsquid:S3776Ö"RRefactor this method to reduce its Cognitive Complexity from 37 to the 15 allowed.(“–ış8©ÓìË”.
+Ysquid:S1161Ä":Add the "@Override" annotation above this method signature(·ìÿÕ8©ÓìË”.
+isquid:S1192z"FDefine a constant instead of duplicating this literal "crush" 3 times.(Ç«œØıÿÿÿÿ8©ÓìË”.
+[squid:S1854æ"<Remove this useless assignment to local variable "runTimer".(Ä¼Ç®8©ÓìË”.
+Lsquid:S1481æ"-Remove this unused "runTimer" local variable.(Ä¼Ç®8©ÓìË”.
