@@ -9,7 +9,7 @@
 import java.util.Scanner;
 import java.awt.Point;
 
-public class Planter {
+public class World {
     /** Constant used to mark child locations in the map.*/
     public static final int GROUND_CHILD = 10;
 
@@ -154,7 +154,7 @@ public class Planter {
     }
 
     public static void main(String[] args) {
-        Planter planter = new Planter();
-        planter.run();
+        World world = new World();
+        world.run();
     }
 }

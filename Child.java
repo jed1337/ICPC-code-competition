@@ -5,7 +5,7 @@ import java.awt.*;
  * child can implement their own behavior.
  */
 public class Child {
-    protected final Planter planter;
+    protected final World world;
 
     /**Location of the child.*/
     Point pos = new Point();
@@ -22,9 +22,9 @@ public class Child {
     /**How many more turns this child is dazed.*/
     int dazed;
 
-    /**We pass the Planter so that we have access to the game variables*/
-    public Child(Planter planter) {
-        this.planter = planter;
+    /**We pass the World so that we have access to the game variables*/
+    public Child(World world) {
+        this.world = world;
     }
 
     /**

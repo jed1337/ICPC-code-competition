@@ -18,8 +18,8 @@ public class CustomChild extends Child{
     /** How many more turns is this child going to run toward the target. */
     int runTimer;
 
-    public CustomChild(Planter planter) {
-        super(planter);
+    public CustomChild(World world) {
+        super(world);
     }
 
     /** Return a move to get this child closer to target. */
@@ -74,7 +74,7 @@ public class CustomChild extends Child{
             // We should drop it.
             if (holding != Const.HOLD_EMPTY &&
                     pos.y < Const.MAP_SIZE - 1 &&
-                    planter.getHeight()[pos.x][pos.y + 1] <= Const.MAX_PILE - 3) {
+                    world.getHeight()[pos.x][pos.y + 1] <= Const.MAX_PILE - 3) {
                 return new Move("drop", pos.x, pos.y + 1);
             }
 
@@ -83,8 +83,8 @@ public class CustomChild extends Child{
             for (int i = 0; i < Const.MAP_SIZE; i++) {
                 for (int j = 0; j < Const.MAP_SIZE; j++) {
                     if ((i != pos.x || j != pos.y) &&
-                            (planter.getGround()[i][j] == Planter.GROUND_CHILD ||
-                                    planter.getGround()[i][j] == Const.GROUND_SMR)) {
+                            (world.getGround()[i][j] == World.GROUND_CHILD ||
+                                    world.getGround()[i][j] == Const.GROUND_SMR)) {
 
                         int deltaX = (pos.x - i);
                         int deltaY = (pos.y - j);
@@ -102,10 +102,10 @@ public class CustomChild extends Child{
             if (nearDist > 5 * 5 &&
                     pos.x < Const.MAP_SIZE - 1 &&
                     pos.y < Const.MAP_SIZE - 1 &&
-                    planter.getGround()[pos.x + 1][pos.y] == Const.GROUND_EMPTY &&
-                    planter.getGround()[pos.x + 1][pos.y + 1] == Const.GROUND_EMPTY &&
-                    planter.getHeight()[pos.x + 1][pos.y] >= 3 &&
-                    planter.getHeight()[pos.x + 1][pos.y + 1] >= 3 &&
+                    world.getGround()[pos.x + 1][pos.y] == Const.GROUND_EMPTY &&
+                    world.getGround()[pos.x + 1][pos.y + 1] == Const.GROUND_EMPTY &&
+                    world.getHeight()[pos.x + 1][pos.y] >= 3 &&
+                    world.getHeight()[pos.x + 1][pos.y + 1] >= 3 &&
                     holding == Const.HOLD_EMPTY) {
                 // Start trying to build a snowman.
                 state = 1;
