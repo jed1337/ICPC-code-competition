@@ -7,6 +7,8 @@ import java.awt.*;
 public class Child {
     protected final World world;
 
+    protected String name;
+
     /**Location of the child.*/
     Point pos = new Point();
 
@@ -88,5 +90,10 @@ public class Child {
         if (x > b)
             return b;
         return x;
+    }
+
+    public Child setName(String name) {
+        this.name = name;
+        return this;
     }
 }

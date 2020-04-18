@@ -107,20 +107,26 @@ public class CustomChild extends Child{
     static final Move[] instructions = {
             new Move("idle"),
             new Move("crouch"),
+
+//            Make and drop large snowball
             new Move("pickup", 1, 0),
             new Move("pickup", 1, 0),
             new Move("pickup", 1, 0),
             new Move("crush"),
             new Move("drop", 1, 0),
+
+//            Make and drop medium snowball
             new Move("pickup", 1, 1),
             new Move("pickup", 1, 1),
             new Move("crush"),
             new Move("drop", 1, 0),
+
+//            Make and drop small snowball
             new Move("pickup", 1, 1),
             new Move("crush"),
             new Move("drop", 1, 0),
+
             new Move("stand"),
     };
-
 }
 
