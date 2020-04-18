@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.util.Random;
 
-public class SnowmanStealer extends Child {
+public class SnowmanStealerByThrow extends Child {
     /**
      * Source of randomness for this player.
      */
@@ -22,7 +22,7 @@ public class SnowmanStealer extends Child {
      */
     int runTimer;
 
-    public SnowmanStealer(World world) {
+    public SnowmanStealerByThrow(World world) {
         super(world);
     }
 

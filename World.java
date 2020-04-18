@@ -38,10 +38,10 @@ public class World {
     }
 
     public void run() {
-        childList[0] = new SnowmanStealer(this).setName("A");
-        childList[1] = new SnowmanStealer(this).setName("B");
-        childList[2] = new SnowmanStealer(this).setName("C");
-        childList[3] = new SnowmanStealer(this).setName("D");
+        childList[0] = new SnowmanStealerByPickup(this).setName("A");
+        childList[1] = new SnowmanStealerByPickup(this).setName("B");
+        childList[2] = new SnowmanStealerByPickup(this).setName("C");
+        childList[3] = new SnowmanStealerByPickup(this).setName("D");
 
         for (int i = Const.CHILD_COUNT; i < childList.length; i++) {
             childList[i] = new Child(this);
