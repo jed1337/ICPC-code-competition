@@ -47,7 +47,9 @@ public class SnowmanMaker extends Child{
             for (int i = 0; i < Const.MAP_SIZE; i++) {
                 for (int j = 0; j < Const.MAP_SIZE; j++) {
                     if ((i != pos.x || j != pos.y) &&
-                            (world.getGround()[i][j] == World.GROUND_CHILD ||
+                            (
+                                    world.getGround()[i][j] == Const.GROUND_CHILD_RED ||
+                                    world.getGround()[i][j] == Const.GROUND_CHILD_BLUE ||
                                     world.getGround()[i][j] == Const.GROUND_SMR)) {
 
                         int deltaX = (pos.x - i);

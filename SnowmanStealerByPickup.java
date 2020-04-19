@@ -34,48 +34,36 @@ public class SnowmanStealerByPickup extends Child {
 
 //        Based on python code
         if (holding != Const.HOLD_S1 && holding != Const.HOLD_S2 && holding != Const.HOLD_S3) {
-            System.err.printf("Child %s Acquire small snowball %n", name);
             return acquireSmallSnowball();
+        } else {
+            return finishNearbySnowmanOrStandOrMoveRandomly();
         }
-        else{
-            System.err.printf("Child %s Finish nearby snowman or stand %n", name);
-            return finishNearbySnowmanOrStand();
-        }
-
-        // Try to run toward the destination.
-//        if (!move.action.equals("idle")) {
-//            System.err.println("not Idle");
-//            return move;
-//        } else {
-//            runTimer--;
-//            return moveToward(runTarget);
-//        }
     }
 
-    private Move acquireSmallSnowball() {
+    protected Move acquireSmallSnowball() {
         if (holding == Const.HOLD_P1) {
-            System.err.println("Crush");
             return new Move("crush");
-        }
-        else {
+        } else {
             if (!standing) {
 //                If crouching next to a blue snowman
                 Point blueSnowman = lookFor(Const.GROUND_SMB);
                 if (blueSnowman != null) {
                     System.err.println("Pickup blue snowman");
-                    return new Move("pickup", blueSnowman);
+                    return pickupIfNoConflict(blueSnowman);
                 }
-                System.err.println("Stand line "+ getLineNumber());
+                System.err.println("Stand line " + getLineNumber());
                 return new Move("stand");
             } else {
-                Point blueSnowman = lookFor(Const.GROUND_SMB);
+                Point blueSnowmanNextToMe = lookFor(Const.GROUND_SMB);
 //                If next to a blue snowman
-                if (blueSnowman != null) {
-                    System.err.println("Crouch if next to blue snowman line "+ getLineNumber());
+                if (blueSnowmanNextToMe != null) {
+                    System.err.println("Crouch if next to blue snowman line " + getLineNumber());
                     return new Move("crouch");
                 } else {
                     runTimer--;
-                    while (runTimer <= 0) {
+
+//                    Go to nearest blue snowman, else, go to somewhere random
+                    if (runTimer <= 0) {
                         int closestBlueSnowmanX = Integer.MAX_VALUE;
                         int closestBlueSnowmanY = Integer.MAX_VALUE;
                         int closestBlueSnowmanPoint = Integer.MAX_VALUE;
@@ -83,16 +71,20 @@ public class SnowmanStealerByPickup extends Child {
 
                         for (int snowmanX = 0; snowmanX < Const.MAP_SIZE; snowmanX++) {
                             for (int snowmanY = 0; snowmanY < Const.MAP_SIZE; snowmanY++) {
-                                if (world.getGround()[snowmanX][snowmanY] == Const.GROUND_SMB) {
-                                    System.err.printf("Snowman blue at (%d,%d)%n", snowmanX, snowmanY);
 
-                                    int deltaX = snowmanX-pos.x;
-                                    int deltaY = snowmanY-pos.y;
-                                    int deltaSquare = deltaX*deltaX + deltaY*deltaY;
+                                if (earlierChildrenWillGoToTheSnowman(snowmanX, snowmanY)) {
+                                    continue;
+                                }
+
+                                if (world.getGround()[snowmanX][snowmanY] == Const.GROUND_SMB) {
+
+                                    int deltaX = snowmanX - pos.x;
+                                    int deltaY = snowmanY - pos.y;
+                                    int deltaSquare = deltaX * deltaX + deltaY * deltaY;
 
                                     hasBlueSnowman = true;
 
-                                    if(deltaSquare<closestBlueSnowmanPoint){
+                                    if (deltaSquare < closestBlueSnowmanPoint) {
                                         closestBlueSnowmanX = snowmanX;
                                         closestBlueSnowmanY = snowmanY;
                                         closestBlueSnowmanPoint = deltaSquare;
@@ -101,12 +93,12 @@ public class SnowmanStealerByPickup extends Child {
                                 }
                             }
                         }
-                        if (hasBlueSnowman){
-                            runTarget.setLocation(new Point(closestBlueSnowmanX , closestBlueSnowmanY));
+                        if (hasBlueSnowman) {
+//                            moveToward(new Point(closestBlueSnowmanX, closestBlueSnowmanY));
+                            runTarget.setLocation(new Point(closestBlueSnowmanX, closestBlueSnowmanY));
                             runTimer = 5;
-                            System.err.printf("Child %s: Run target location towards (%d,%d)%n", name, closestBlueSnowmanX, closestBlueSnowmanY);
                         } else {
-                            System.err.printf("Child %s random location %n", name);
+                            System.err.println("Run timer "+runTimer+" reset to 5");
                             runTarget.setLocation(
                                     rnd.nextInt(Const.MAP_SIZE - 1),
                                     rnd.nextInt(Const.MAP_SIZE - 1)
@@ -114,50 +106,70 @@ public class SnowmanStealerByPickup extends Child {
                             runTimer = 5;
                         }
                     }
-                    System.err.println("Else 115. Runtarget "+runTarget);
+                    System.err.printf("Else %d. isStanding: %s Current location: %s, Runtarget: %s %n", getLineNumber(), standing, pos, runTarget);
                     return moveToward(runTarget);
                 }
             }
         }
     }
 
-    private int deltaComparison(Point runTarget) {
+    protected Move pickupIfNoConflict(Point pickupLocation) {
+        for (int i = 0; i < childNumber; i++) {
+            Child earlierChild = childArray[i];
+            if (earlierChild.lastMove.action.equals("pickup"))
+                if (earlierChild.lastMove.dest.equals(pickupLocation)) {
+                    System.err.println("Same pickup location at " + pickupLocation);
+                    return validRandomMovement();
+                } else{
+                    System.err.println("Different pickup location. We want "+pickupLocation+" they have "+earlierChild.lastMove.dest);
+                }
+        }
+        return new Move("pickup", pickupLocation);
+    }
+
+    protected boolean earlierChildrenWillGoToTheSnowman(int snowmanX, int snowmanY) {
+        for (int i = 0; i < childNumber; i++) {
+            Point earlierChildMove = childArray[i].lastMove.dest;
+
+            if (earlierChildMove != null && (earlierChildMove.x == snowmanX && earlierChildMove.y == snowmanY)) {
+                System.err.printf("Earlier child will go to snowman at (%d, %d). Line %d %n", snowmanX, snowmanY, getLineNumber());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected int deltaComparison(Point runTarget) {
         int deltaX = pos.x - runTarget.x;
         int deltaY = pos.y - runTarget.y;
 
         return deltaX * deltaX + deltaY * deltaY;
     }
 
-    private Move finishNearbySnowmanOrStand() {
+    protected Move finishNearbySnowmanOrStandOrMoveRandomly() {
         Point almostSnowmanLocation = lookFor(Const.GROUND_LM);
         if (almostSnowmanLocation != null) {
             return new Move("drop", almostSnowmanLocation);
+        } else if(!standing){
+            return new Move("stand");
+        } else{
+            System.err.println("Random movement line " + getLineNumber());
+            return validRandomMovement();
         }
-        System.err.println("Idle line "+ getLineNumber());
-        return new Move();
     }
 
-    private Point lookFor(int matcher) {
-        for (int ox = pos.x - 1; ox <= pos.x + 1; ox++)
-            for (int oy = pos.y - 1; oy <= pos.y + 1; oy++) {
+    protected Point lookFor(int matcher) {
+        for (int x = pos.x - 1; x <= pos.x + 1; x++)
+            for (int y = pos.y - 1; y <= pos.y + 1; y++) {
                 // Is there snow to pick up?
-                if (locationWithinBounds(ox, oy) &&
-                        notCurrentLocation(ox, oy) &&
-                        world.getGround()[ox][oy] == matcher
+                if (locationWithinBounds(x, y) &&
+                        notCurrentLocation(x, y) &&
+                        world.getGround()[x][y] == matcher
                 ) {
-                    return new Point(ox, oy);
+                    return new Point(x, y);
                 }
             }
         return null;
-    }
-
-    private boolean notCurrentLocation(int ox, int oy) {
-        return ox != pos.x || oy != pos.y;
-    }
-
-    private boolean locationWithinBounds(int ox, int oy) {
-        return ox >= 0 && ox < Const.MAP_SIZE &&
-                oy >= 0 && oy < Const.MAP_SIZE;
     }
 
     public int getLineNumber() {

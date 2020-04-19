@@ -9,9 +9,6 @@
 import java.util.Scanner;
 
 public class World {
-    /** Constant used to mark child locations in the map.*/
-    public static final int GROUND_CHILD = 10;
-
     /** Current game score for self (red) and opponent (blue). */
     private int[] score = new int[2];
 
@@ -134,7 +131,12 @@ public class World {
         for (int i = 0; i < Const.CHILD_COUNT * 2; i++) {
             Child c = childArray[i];
             if (c.pos.x >= 0) {
-                ground[c.pos.x][c.pos.y] = GROUND_CHILD;
+                if(i <Const.CHILD_COUNT){
+                    ground[c.pos.x][c.pos.y] = Const.GROUND_CHILD_RED;
+                }
+                else{
+                    ground[c.pos.x][c.pos.y] = Const.GROUND_CHILD_BLUE;
+                }
             }
         }
     }
@@ -146,8 +148,8 @@ public class World {
 //            if (m.action.equals("idle")){
 //                System.err.printf("Child %s at %s given move is idle %n", currentChild.name, m.dest);
 //            }
-
-//            Avoid moving or dropping into the same space as someone else
+////
+////            Avoid moving or dropping into the same space as someone else
 //            for (int j = 0; j < i; j++) {
 //                Child previousChild = childArray[j];
 //                boolean sameMoveLocation = m.dest == previousChild.lastMove.dest;

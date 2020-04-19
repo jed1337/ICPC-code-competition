@@ -128,16 +128,6 @@ public class SnowmanStealerByThrow extends Child {
         }
     }
 
-    private boolean notCurrentLocation(int ox, int oy) {
-        return ox != pos.x || oy != pos.y;
-    }
-
-    private boolean locationWithinBounds(int ox, int oy) {
-        return ox >= 0 && ox < Const.MAP_SIZE &&
-                oy >= 0 && oy < Const.MAP_SIZE;
-    }
-
-
     /**
      * sequence of moves templates to build a to the right of the player.
      * For the first one, we're just looking for a place to build.
