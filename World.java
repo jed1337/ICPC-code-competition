@@ -7,7 +7,6 @@
 // Sturgill, Baylor University
 
 import java.util.Scanner;
-import java.awt.Point;
 
 public class World {
     /** Constant used to mark child locations in the map.*/
@@ -23,7 +22,7 @@ public class World {
     private int[][] ground = new int[Const.MAP_SIZE][Const.MAP_SIZE];
 
     /** List of children on the field, half for each team. */
-    private Child[] childList = new Child[2 * Const.CHILD_COUNT];
+    private Child[] childArray = new Child[2 * Const.CHILD_COUNT];
 
     public int[][] getSnowHeight() {
         return snowHeight;
@@ -33,18 +32,18 @@ public class World {
         return ground;
     }
 
-    public Child[] getChildList() {
-        return childList;
+    public Child[] getChildArray() {
+        return childArray;
     }
 
     public void run() {
-        childList[0] = new SnowmanStealerByPickup(this).setName("A").setChildArray(childList).setChildNumber(0);
-        childList[1] = new SnowmanStealerByPickup(this).setName("B").setChildArray(childList).setChildNumber(1);
-        childList[2] = new SnowmanStealerByPickup(this).setName("C").setChildArray(childList).setChildNumber(2);
-        childList[3] = new SnowmanStealerByPickup(this).setName("D").setChildArray(childList).setChildNumber(3);
+        childArray[0] = new SnowmanStealerByPickup(this).setName("A").setChildArray(childArray).setChildNumber(0);
+        childArray[1] = new SnowmanStealerByPickup(this).setName("B").setChildArray(childArray).setChildNumber(1);
+        childArray[2] = new SnowmanStealerByPickup(this).setName("C").setChildArray(childArray).setChildNumber(2);
+        childArray[3] = new SnowmanStealerByPickup(this).setName("D").setChildArray(childArray).setChildNumber(3);
 
-        for (int i = Const.CHILD_COUNT; i < childList.length; i++) {
-            childList[i] = new Child(this);
+        for (int i = Const.CHILD_COUNT; i < childArray.length; i++) {
+            childArray[i] = new Child(this);
         }
 
         // Scanner to parse input from the game engine.
@@ -102,7 +101,7 @@ public class World {
     private void readChildrenState(Scanner in) {
         String token;
         for (int i = 0; i < Const.CHILD_COUNT * 2; i++) {
-            Child c = childList[i];
+            Child c = childArray[i];
 
             // Can we see this child?
             token = in.next();
@@ -133,7 +132,7 @@ public class World {
 
     private void markChildren() {
         for (int i = 0; i < Const.CHILD_COUNT * 2; i++) {
-            Child c = childList[i];
+            Child c = childArray[i];
             if (c.pos.x >= 0) {
                 ground[c.pos.x][c.pos.y] = GROUND_CHILD;
             }
@@ -142,7 +141,7 @@ public class World {
 
     private void decideAction() {
         for (int i = 0; i < Const.CHILD_COUNT; i++) {
-            Child currentChild = childList[i];
+            Child currentChild = childArray[i];
             Move m = currentChild.chooseMove();
 //            if (m.action.equals("idle")){
 //                System.err.printf("Child %s at %s given move is idle %n", currentChild.name, m.dest);
@@ -150,7 +149,7 @@ public class World {
 
 //            Avoid moving or dropping into the same space as someone else
 //            for (int j = 0; j < i; j++) {
-//                Child previousChild = childList[j];
+//                Child previousChild = childArray[j];
 //                boolean sameMoveLocation = m.dest == previousChild.lastMove.dest;
 //
 //                if((m.action=="crawl"||m.action=="run"||m.action=="drop") && sameMoveLocation){
