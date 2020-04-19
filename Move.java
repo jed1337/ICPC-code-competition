@@ -12,7 +12,14 @@ class Move {
         action = act;
     }
 
+
     /** Make a move for the given action and destination. */
+    Move(String act, Point p) {
+        action = act;
+        dest = p;
+    }
+
+        /** Make a move for the given action and destination. */
     Move(String act, int x, int y) {
         action = act;
         dest = new Point(x, y);

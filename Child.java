@@ -24,6 +24,12 @@ public class Child {
     /**How many more turns this child is dazed.*/
     int turnsDazed;
 
+    protected int childNumber;
+
+    protected Child[] childArray;
+
+    protected Move lastMove = new Move();
+
     /**We pass the World so that we have access to the game variables*/
     public Child(World world) {
         this.world = world;
@@ -94,6 +100,21 @@ public class Child {
 
     public Child setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public Child setChildNumber(int childNumber) {
+        this.childNumber = childNumber;
+        return this;
+    }
+
+    public Child setChildArray(Child[] childArray) {
+        this.childArray = childArray;
+        return this;
+    }
+
+    public Child setLastMove(Move lastMove) {
+        this.lastMove = lastMove;
         return this;
     }
 }

@@ -38,10 +38,10 @@ public class World {
     }
 
     public void run() {
-        childList[0] = new SnowmanStealerByPickup(this).setName("A");
-        childList[1] = new SnowmanStealerByPickup(this).setName("B");
-        childList[2] = new SnowmanStealerByPickup(this).setName("C");
-        childList[3] = new SnowmanStealerByPickup(this).setName("D");
+        childList[0] = new SnowmanStealerByPickup(this).setName("A").setChildArray(childList).setChildNumber(0);
+        childList[1] = new SnowmanStealerByPickup(this).setName("B").setChildArray(childList).setChildNumber(1);
+        childList[2] = new SnowmanStealerByPickup(this).setName("C").setChildArray(childList).setChildNumber(2);
+        childList[3] = new SnowmanStealerByPickup(this).setName("D").setChildArray(childList).setChildNumber(3);
 
         for (int i = Const.CHILD_COUNT; i < childList.length; i++) {
             childList[i] = new Child(this);
@@ -49,12 +49,6 @@ public class World {
 
         // Scanner to parse input from the game engine.
         Scanner in = new Scanner(System.in);
-
-        // Random destination for each player.
-        Point[] runTarget = new Point[Const.CHILD_COUNT];
-        for (int i = 0; i < runTarget.length; i++) {
-            runTarget[i] = new Point();
-        }
 
         // Keep reading states until the game ends.
         int turnNum = in.nextInt();
@@ -148,7 +142,27 @@ public class World {
 
     private void decideAction() {
         for (int i = 0; i < Const.CHILD_COUNT; i++) {
-            Move m = childList[i].chooseMove();
+            Child currentChild = childList[i];
+            Move m = currentChild.chooseMove();
+//            if (m.action.equals("idle")){
+//                System.err.printf("Child %s at %s given move is idle %n", currentChild.name, m.dest);
+//            }
+
+//            Avoid moving or dropping into the same space as someone else
+//            for (int j = 0; j < i; j++) {
+//                Child previousChild = childList[j];
+//                boolean sameMoveLocation = m.dest == previousChild.lastMove.dest;
+//
+//                if((m.action=="crawl"||m.action=="run"||m.action=="drop") && sameMoveLocation){
+//                    System.err.printf("Child %s at %s is idle. Because of conflict with Child %s %s to %n", currentChild.name, m.dest, previousChild.name, m.action, m.dest);
+//
+//                    m.action = "idle";
+//                    m.dest = null;
+//
+//                }
+//            }
+
+            currentChild.setLastMove(m);
 
             /* Write out the child's move */
             if (m.dest == null) {

@@ -20,7 +20,7 @@ public class SnowmanStealerByPickup extends Child {
     /**
      * How many more turns is this child going to run toward the target.
      */
-    int runTimer;
+    int runTimer = 0;
 
     public SnowmanStealerByPickup(World world) {
         super(world);
@@ -28,46 +28,53 @@ public class SnowmanStealerByPickup extends Child {
 
     public Move chooseMove() {
         if (turnsDazed > 0) {
+            System.err.println("Idle line 31");
             return new Move();
         }
 
-        Move move = new Move();
-
 //        Based on python code
         if (holding != Const.HOLD_S1 && holding != Const.HOLD_S2 && holding != Const.HOLD_S3) {
-            acquireSmallSnowball(move);
+            System.err.printf("Child %s Acquire small snowball %n", name);
+            return acquireSmallSnowball();
         }
         else{
-            finishNearbySnowmanOrStand(move);
+            System.err.printf("Child %s Finish nearby snowman or stand %n", name);
+            return finishNearbySnowmanOrStand();
         }
 
         // Try to run toward the destination.
-        if (!move.action.equals("idle")) {
-            System.err.println("Idle");
-            return move;
-        } else {
-            runTimer--;
-            return moveToward(runTarget);
-        }
+//        if (!move.action.equals("idle")) {
+//            System.err.println("not Idle");
+//            return move;
+//        } else {
+//            runTimer--;
+//            return moveToward(runTarget);
+//        }
     }
 
-    private void acquireSmallSnowball(Move move) {
+    private Move acquireSmallSnowball() {
         if (holding == Const.HOLD_P1) {
-            move.action = "crush";
-        } else {
+            System.err.println("Crush");
+            return new Move("crush");
+        }
+        else {
             if (!standing) {
-//                If next to a blue snowman
+//                If crouching next to a blue snowman
                 Point blueSnowman = lookFor(Const.GROUND_SMB);
                 if (blueSnowman != null) {
-                    move.action = "pickup";
-                    move.dest = blueSnowman;
+                    System.err.println("Pickup blue snowman");
+                    return new Move("pickup", blueSnowman);
                 }
+                System.err.println("Stand line "+ getLineNumber());
+                return new Move("stand");
             } else {
                 Point blueSnowman = lookFor(Const.GROUND_SMB);
 //                If next to a blue snowman
                 if (blueSnowman != null) {
-                    move.action = "crouch";
+                    System.err.println("Crouch if next to blue snowman line "+ getLineNumber());
+                    return new Move("crouch");
                 } else {
+                    runTimer--;
                     while (runTimer <= 0) {
                         int closestBlueSnowmanX = Integer.MAX_VALUE;
                         int closestBlueSnowmanY = Integer.MAX_VALUE;
@@ -96,16 +103,19 @@ public class SnowmanStealerByPickup extends Child {
                         }
                         if (hasBlueSnowman){
                             runTarget.setLocation(new Point(closestBlueSnowmanX , closestBlueSnowmanY));
-                            runTimer = 1 + rnd.nextInt(5);
+                            runTimer = 5;
                             System.err.printf("Child %s: Run target location towards (%d,%d)%n", name, closestBlueSnowmanX, closestBlueSnowmanY);
                         } else {
+                            System.err.printf("Child %s random location %n", name);
                             runTarget.setLocation(
                                     rnd.nextInt(Const.MAP_SIZE - 1),
                                     rnd.nextInt(Const.MAP_SIZE - 1)
                             );
-                            runTimer = 1 + rnd.nextInt(5);
+                            runTimer = 5;
                         }
                     }
+                    System.err.println("Else 115. Runtarget "+runTarget);
+                    return moveToward(runTarget);
                 }
             }
         }
@@ -118,12 +128,13 @@ public class SnowmanStealerByPickup extends Child {
         return deltaX * deltaX + deltaY * deltaY;
     }
 
-    private void finishNearbySnowmanOrStand(Move move) {
-        Point almostSnowman = lookFor(Const.GROUND_LM);
-        if (almostSnowman != null) {
-            move.action = "drop";
-            move.dest = almostSnowman;
+    private Move finishNearbySnowmanOrStand() {
+        Point almostSnowmanLocation = lookFor(Const.GROUND_LM);
+        if (almostSnowmanLocation != null) {
+            return new Move("drop", almostSnowmanLocation);
         }
+        System.err.println("Idle line "+ getLineNumber());
+        return new Move();
     }
 
     private Point lookFor(int matcher) {
@@ -149,33 +160,7 @@ public class SnowmanStealerByPickup extends Child {
                 oy >= 0 && oy < Const.MAP_SIZE;
     }
 
-
-    /**
-     * sequence of moves templates to build a to the right of the player.
-     * For the first one, we're just looking for a place to build.
-     */
-    static final Move[] instructions = {
-            new Move("idle"),
-            new Move("crouch"),
-
-//            Make and drop large snowball
-            new Move("pickup", 1, 0),
-            new Move("pickup", 1, 0),
-            new Move("pickup", 1, 0),
-            new Move("crush"),
-            new Move("drop", 1, 0),
-
-//            Make and drop medium snowball
-            new Move("pickup", 1, 1),
-            new Move("pickup", 1, 1),
-            new Move("crush"),
-            new Move("drop", 1, 0),
-
-//            Make and drop small snowball
-            new Move("pickup", 1, 1),
-            new Move("crush"),
-            new Move("drop", 1, 0),
-
-            new Move("stand"),
-    };
+    public int getLineNumber() {
+        return Thread.currentThread().getStackTrace()[2].getLineNumber();
+    }
 }
