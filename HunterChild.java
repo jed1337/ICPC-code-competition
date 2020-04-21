@@ -14,7 +14,7 @@ public class HunterChild extends Child{
     /** How many more turns is this child going to run toward the target. */
     int runTimer;
 
-    public HunterChild(World world) {
+    public HunterChild(AbstractWorld world) {
         super(world);
     }
 

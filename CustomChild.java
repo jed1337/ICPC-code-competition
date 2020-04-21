@@ -18,7 +18,7 @@ public class CustomChild extends Child{
     /** How many more turns is this child going to run toward the target. */
     int runTimer;
 
-    public CustomChild(World world) {
+    public CustomChild(AbstractWorld world) {
         super(world);
     }
 

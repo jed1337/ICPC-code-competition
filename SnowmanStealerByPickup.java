@@ -22,7 +22,7 @@ public class SnowmanStealerByPickup extends Child {
      */
     int runTimer = 0;
 
-    public SnowmanStealerByPickup(World world) {
+    public SnowmanStealerByPickup(AbstractWorld world) {
         super(world);
     }
 

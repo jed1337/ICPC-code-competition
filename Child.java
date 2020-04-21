@@ -5,7 +5,7 @@ import java.awt.*;
  * child can implement their own behavior.
  */
 public class Child {
-    protected final World world;
+    protected final AbstractWorld world;
 
     protected String name;
 
@@ -70,8 +70,9 @@ public class Child {
 
     /**
      * We pass the World so that we have access to the game variables
+     * @param world
      */
-    public Child(World world) {
+    public Child(AbstractWorld world) {
         this.world = world;
     }
 
