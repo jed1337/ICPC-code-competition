@@ -75,9 +75,14 @@ public class HunterChild extends Child{
 
                 //Loop through the enemy children
                 for (int j = Const.CHILD_COUNT; !victimFound && j < Const.CHILD_COUNT * 2; j++) {
-                    if (world.getChildArray()[j].pos.x >= 0) {
-                        int deltaX = world.getChildArray()[j].pos.x - pos.x;
-                        int deltaY = world.getChildArray()[j].pos.y - pos.y;
+                    Child enemyChild = world.getChildArray()[j];
+
+//                    If we can see the enemy child
+                    if (enemyChild.pos.x >= 0) {
+                        System.err.printf("Enemy child location: %s, holding %s, turnsDazed %s, isStanding %s, %n", enemyChild.pos, enemyChild.holding, enemyChild.turnsDazed, enemyChild.standing);
+
+                        int deltaX = enemyChild.pos.x - pos.x;
+                        int deltaY = enemyChild.pos.y - pos.y;
                         int deltaSquare = deltaX * deltaX + deltaY * deltaY;
                         if (deltaSquare < 8 * 8) {
                             victimFound = true;

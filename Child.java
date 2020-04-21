@@ -93,7 +93,7 @@ public class Child {
 
 
         if (clampedLocation !=null && canMove(clampedLocation)) {
-            System.err.printf("Current location: %s, Target: %s, Clamp location: %s %n", pos, target, clampedLocation);
+//            System.err.printf("Current location: %s, Target: %s, Clamp location: %s %n", pos, target, clampedLocation);
 
             if (standing) {
                 return new Move("run", clampedLocation);
@@ -113,7 +113,6 @@ public class Child {
         if (standing) {
             if (pos.x != target.x) {
                 if (pos.y != target.y) {
-                    System.err.println("Diagonal");
                     // Run diagonally.
                     return new Point(
                             pos.x + clamp(target.x - pos.x, -1, 1),

@@ -11,10 +11,10 @@ import java.util.Scanner;
 public class EnemyWorld extends AbstractWorld{
 
     public void run() {
-        childArray[0] = new Child(this).setName("A").setChildArray(childArray).setChildNumber(0);
-        childArray[1] = new Child(this).setName("B").setChildArray(childArray).setChildNumber(1);
-        childArray[2] = new Child(this).setName("C").setChildArray(childArray).setChildNumber(2);
-        childArray[3] = new Child(this).setName("D").setChildArray(childArray).setChildNumber(3);
+        childArray[0] = new CustomChild(this).setName("A").setChildArray(childArray).setChildNumber(0);
+        childArray[1] = new CustomChild(this).setName("B").setChildArray(childArray).setChildNumber(1);
+        childArray[2] = new CustomChild(this).setName("C").setChildArray(childArray).setChildNumber(2);
+        childArray[3] = new CustomChild(this).setName("D").setChildArray(childArray).setChildNumber(3);
 
         for (int i = Const.CHILD_COUNT; i < childArray.length; i++) {
             childArray[i] = new Child(this);
