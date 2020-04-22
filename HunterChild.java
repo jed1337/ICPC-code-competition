@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.util.Random;
 
-public class HunterChild extends Child{
+public class HunterChild extends Child {
     /** Source of randomness for this player. */
     static Random rnd = new Random();
 
@@ -23,6 +23,8 @@ public class HunterChild extends Child{
             return new Move();
         }
 
+        System.err.printf("Our location: %s, holding %s, turnsDazed %s, isStanding %s, %n", pos, holding, turnsDazed, standing);
+
         Move move = new Move();
 
         // See if the child needs a new destination.
@@ -34,38 +36,7 @@ public class HunterChild extends Child{
             runTimer = 1 + rnd.nextInt(14);
         }
 
-        // Try to acquire a snowball if we need one.
-        if (holding != Const.HOLD_S1) {
-            // Crush into a snowball, if we have snow.
-            if (holding == Const.HOLD_P1) {
-                move.action = "crush";
-            } else {
-                // We don't have snow, see if there is some nearby.
-                int sx = -1, sy = -1;
-                for (int ox = pos.x - 1; ox <= pos.x + 1; ox++)
-                    for (int oy = pos.y - 1; oy <= pos.y + 1; oy++) {
-                        // Is there snow to pick up?
-                        if (ox >= 0 && ox < Const.MAP_SIZE &&
-                                oy >= 0 && oy < Const.MAP_SIZE &&
-                                (ox != pos.x || oy != pos.y) &&
-                                world.getGround()[ox][oy] == Const.GROUND_EMPTY &&
-                                world.getSnowHeight()[ox][oy] > 0) {
-                            sx = ox;
-                            sy = oy;
-                        }
-                    }
-
-                // If there is snow, try to get it.
-                if (sx >= 0) {
-                    if (standing) {
-                        move.action = "crouch";
-                    } else {
-                        move.action = "pickup";
-                        move.dest = new Point(sx, sy);
-                    }
-                }
-            }
-        } else {
+        if (isHoldingSnowball(this)) {
             // Stand up if the child is armed.
             if (!standing) {
                 move.action = "stand";
@@ -77,21 +48,57 @@ public class HunterChild extends Child{
                 for (int j = Const.CHILD_COUNT; !victimFound && j < Const.CHILD_COUNT * 2; j++) {
                     Child enemyChild = world.getChildArray()[j];
 
-//                    If we can see the enemy child
-                    if (enemyChild.pos.x >= 0) {
+                    if (weCanSeeTheEnemy(enemyChild) &&
+                            enemyChild.standing &&
+                            enemyChild.turnsDazed == 0 &&
+                            withinThrowingDistance(enemyChild)
+                    ) {
                         System.err.printf("Enemy child location: %s, holding %s, turnsDazed %s, isStanding %s, %n", enemyChild.pos, enemyChild.holding, enemyChild.turnsDazed, enemyChild.standing);
 
-                        int deltaX = enemyChild.pos.x - pos.x;
-                        int deltaY = enemyChild.pos.y - pos.y;
-                        int deltaSquare = deltaX * deltaX + deltaY * deltaY;
-                        if (deltaSquare < 8 * 8) {
-                            victimFound = true;
+                        if (isHoldingSnowball(enemyChild)) {
+                            move.action = "catch";
+                            move.dest = enemyChild.pos;
+                        } else {
+                            int deltaX = enemyChild.pos.x - pos.x;
+                            int deltaY = enemyChild.pos.y - pos.y;
+
                             move.action = "throw";
-                            // throw past the victim, so we will probably hit them
-                            // before the snowball falls into the snow.
-                            move.dest = new Point(pos.x + deltaX * 2,
-                                    pos.y + deltaY * 2);
+                            move.dest = new Point(
+                                    pos.x + deltaX * 2,
+                                    pos.y + deltaY * 2
+                            );
                         }
+                    }
+                }
+            }
+        } else {
+            // Crush into a snowball, if we have snow.
+            if (holding == Const.HOLD_P1) {
+                move.action = "crush";
+            } else {
+                // We don't have snow, see if there is some nearby.
+                int snowX = -1;
+                int snowY = -1;
+                for (int ox = pos.x - 1; ox <= pos.x + 1; ox++)
+                    for (int oy = pos.y - 1; oy <= pos.y + 1; oy++) {
+                        // Is there snow to pick up?
+                        if (ox >= 0 && ox < Const.MAP_SIZE &&
+                                oy >= 0 && oy < Const.MAP_SIZE &&
+                                (ox != pos.x || oy != pos.y) &&
+                                world.getGround()[ox][oy] == Const.GROUND_EMPTY &&
+                                world.getSnowHeight()[ox][oy] > 0) {
+                            snowX = ox;
+                            snowY = oy;
+                        }
+                    }
+
+                // If there is snow, try to get it.
+                if (snowX >= 0) {
+                    if (standing) {
+                        move.action = "crouch";
+                    } else {
+                        move.action = "pickup";
+                        move.dest = new Point(snowX, snowY);
                     }
                 }
             }
@@ -104,6 +111,24 @@ public class HunterChild extends Child{
             runTimer--;
             return moveToward(runTarget);
         }
+    }
+
+    private boolean weCanSeeTheEnemy(Child enemyChild) {
+        return enemyChild.pos.x >= 0;
+    }
+
+    private boolean isHoldingSnowball(Child child) {
+        return child.holding == Const.HOLD_S1 ||
+                child.holding == Const.HOLD_S2 ||
+                child.holding == Const.HOLD_S3;
+    }
+
+    private boolean withinThrowingDistance(Child enemyChild) {
+        int deltaX = enemyChild.pos.x - pos.x;
+        int deltaY = enemyChild.pos.y - pos.y;
+        int deltaSquare = deltaX * deltaX + deltaY * deltaY;
+
+        return deltaSquare <= 64;
     }
 }
 
