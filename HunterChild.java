@@ -25,7 +25,7 @@ public class HunterChild extends Child {
 
         System.err.printf("Our location: %s, holding %s, turnsDazed %s, isStanding %s, %n", pos, holding, turnsDazed, standing);
 
-        Move move = new Move();
+//        Move move = new Move();
 
         // See if the child needs a new destination.
         while (runTimer <= 0 || runTarget.equals(pos)) {
@@ -39,7 +39,7 @@ public class HunterChild extends Child {
         if (isHoldingSnowball(this)) {
             // Stand up if the child is armed.
             if (!standing) {
-                move.action = "stand";
+                return new Move("stand");
             } else {
                 // Try to find a victim.
                 boolean victimFound = false;
@@ -56,17 +56,15 @@ public class HunterChild extends Child {
                         System.err.printf("Enemy child location: %s, holding %s, turnsDazed %s, isStanding %s, %n", enemyChild.pos, enemyChild.holding, enemyChild.turnsDazed, enemyChild.standing);
 
                         if (isHoldingSnowball(enemyChild)) {
-                            move.action = "catch";
-                            move.dest = enemyChild.pos;
+                            return new Move("catch", enemyChild.pos);
                         } else {
                             int deltaX = enemyChild.pos.x - pos.x;
                             int deltaY = enemyChild.pos.y - pos.y;
 
-                            move.action = "throw";
-                            move.dest = new Point(
+                            return new Move("throw", new Point(
                                     pos.x + deltaX * 2,
                                     pos.y + deltaY * 2
-                            );
+                            ));
                         }
                     }
                 }
@@ -74,7 +72,7 @@ public class HunterChild extends Child {
         } else {
             // Crush into a snowball, if we have snow.
             if (holding == Const.HOLD_P1) {
-                move.action = "crush";
+                return new Move("crush");
             } else {
                 // We don't have snow, see if there is some nearby.
                 int snowX = -1;
@@ -95,22 +93,16 @@ public class HunterChild extends Child {
                 // If there is snow, try to get it.
                 if (snowX >= 0) {
                     if (standing) {
-                        move.action = "crouch";
+                        return new Move("crouch");
                     } else {
-                        move.action = "pickup";
-                        move.dest = new Point(snowX, snowY);
+                        return new Move("pickup", new Point(snowX, snowY));
                     }
                 }
             }
         }
 
-        // Try to run toward the destination.
-        if (!move.action.equals("idle")) {
-            return move;
-        } else {
-            runTimer--;
-            return moveToward(runTarget);
-        }
+        runTimer--;
+        return moveToward(runTarget);
     }
 
     private boolean weCanSeeTheEnemy(Child enemyChild) {
