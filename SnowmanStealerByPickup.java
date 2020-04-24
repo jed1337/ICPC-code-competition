@@ -46,7 +46,7 @@ public class SnowmanStealerByPickup extends Child {
         } else {
             if (!standing) {
 //                If crouching next to a blue snowman
-                Point blueSnowman = lookFor(Const.GROUND_SMB);
+                Point blueSnowman = lookNextToMeFor(Const.GROUND_SMB);
                 if (blueSnowman != null) {
                     System.err.println("Pickup blue snowman");
                     return pickupIfNoConflict(blueSnowman);
@@ -54,7 +54,7 @@ public class SnowmanStealerByPickup extends Child {
                 System.err.println("Stand line " + getLineNumber());
                 return new Move("stand");
             } else {
-                Point blueSnowmanNextToMe = lookFor(Const.GROUND_SMB);
+                Point blueSnowmanNextToMe = lookNextToMeFor(Const.GROUND_SMB);
 //                If next to a blue snowman
                 if (blueSnowmanNextToMe != null) {
                     System.err.println("Crouch if next to blue snowman line " + getLineNumber());
@@ -147,7 +147,7 @@ public class SnowmanStealerByPickup extends Child {
     }
 
     protected Move finishNearbySnowmanOrStandOrMoveRandomly() {
-        Point almostSnowmanLocation = lookFor(Const.GROUND_LM);
+        Point almostSnowmanLocation = lookNextToMeFor(Const.GROUND_LM);
         if (almostSnowmanLocation != null) {
             return new Move("drop", almostSnowmanLocation);
         } else if(!standing){
@@ -158,7 +158,7 @@ public class SnowmanStealerByPickup extends Child {
         }
     }
 
-    protected Point lookFor(int matcher) {
+    protected Point lookNextToMeFor(int matcher) {
         for (int x = pos.x - 1; x <= pos.x + 1; x++)
             for (int y = pos.y - 1; y <= pos.y + 1; y++) {
                 // Is there snow to pick up?

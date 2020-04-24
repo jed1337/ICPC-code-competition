@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import static java.lang.Math.abs;
@@ -7,6 +9,59 @@ import static java.lang.Math.max;
 public class HunterChild extends Child {
     /** Source of randomness for this player. */
     static Random rnd = new Random();
+
+    static Map<String, Point> targetEnemySnowmanMap = new HashMap<>();
+
+    static{
+        targetEnemySnowmanMap.put("-1,-1", new Point(-3,-3));
+        targetEnemySnowmanMap.put("-1,-2", new Point(-3,-6));
+        targetEnemySnowmanMap.put("-1,-3", new Point(-3,-9));
+        targetEnemySnowmanMap.put("-1,0", new Point(-3,0));
+        targetEnemySnowmanMap.put("-1,1", new Point(-3,3));
+        targetEnemySnowmanMap.put("-1,2", new Point(-3,6));
+        targetEnemySnowmanMap.put("-1,3", new Point(-3,9));
+        targetEnemySnowmanMap.put("-2,-1", new Point(-6,-3));
+        targetEnemySnowmanMap.put("-2,-2", new Point(-6,-6));
+        targetEnemySnowmanMap.put("-2,-3", new Point(-6,-9));
+        targetEnemySnowmanMap.put("-2,0", new Point(-6,0));
+        targetEnemySnowmanMap.put("-2,1", new Point(-6,3));
+        targetEnemySnowmanMap.put("-2,2", new Point(-6,6));
+        targetEnemySnowmanMap.put("-2,3", new Point(-6,9));
+        targetEnemySnowmanMap.put("-3,-1", new Point(-9,-3));
+        targetEnemySnowmanMap.put("-3,-2", new Point(-9,-6));
+        targetEnemySnowmanMap.put("-3,-3", new Point(-9,-9));
+        targetEnemySnowmanMap.put("-3,0", new Point(-9,0));
+        targetEnemySnowmanMap.put("-3,1", new Point(-9,3));
+        targetEnemySnowmanMap.put("-3,2", new Point(-9,6));
+        targetEnemySnowmanMap.put("-3,3", new Point(-9,9));
+        targetEnemySnowmanMap.put("0,-1", new Point(0,-3));
+        targetEnemySnowmanMap.put("0,-2", new Point(0,-6));
+        targetEnemySnowmanMap.put("0,-3", new Point(0,-9));
+        targetEnemySnowmanMap.put("0,1", new Point(0,3));
+        targetEnemySnowmanMap.put("0,2", new Point(0,6));
+        targetEnemySnowmanMap.put("0,3", new Point(0,9));
+        targetEnemySnowmanMap.put("1,-1", new Point(3,-3));
+        targetEnemySnowmanMap.put("1,-2", new Point(3,-6));
+        targetEnemySnowmanMap.put("1,-3", new Point(3,-9));
+        targetEnemySnowmanMap.put("1,0", new Point(3,0));
+        targetEnemySnowmanMap.put("1,1", new Point(3,3));
+        targetEnemySnowmanMap.put("1,2", new Point(3,6));
+        targetEnemySnowmanMap.put("1,3", new Point(3,9));
+        targetEnemySnowmanMap.put("2,-1", new Point(6,-3));
+        targetEnemySnowmanMap.put("2,-2", new Point(6,-6));
+        targetEnemySnowmanMap.put("2,-3", new Point(6,-9));
+        targetEnemySnowmanMap.put("2,0", new Point(6,0));
+        targetEnemySnowmanMap.put("2,1", new Point(6,3));
+        targetEnemySnowmanMap.put("2,2", new Point(6,6));
+        targetEnemySnowmanMap.put("2,3", new Point(6,9));
+        targetEnemySnowmanMap.put("3,-1", new Point(9,-3));
+        targetEnemySnowmanMap.put("3,-2", new Point(9,-6));
+        targetEnemySnowmanMap.put("3,-3", new Point(9,-9));
+        targetEnemySnowmanMap.put("3,0", new Point(9,0));
+        targetEnemySnowmanMap.put("3,1", new Point(9,3));
+        targetEnemySnowmanMap.put("3,2", new Point(9,6));
+        targetEnemySnowmanMap.put("3,3", new Point(9,9));
+    }
 
     /** Current instruction this child is executing. */
     int state = 0;
@@ -42,11 +97,9 @@ public class HunterChild extends Child {
             if (!standing) {
                 return new Move("stand");
             } else {
-                // Try to find a victim.
-                boolean victimFound = false;
 
-                //Loop through the enemy children
-                for (int j = Const.CHILD_COUNT; !victimFound && j < Const.CHILD_COUNT * 2; j++) {
+//                Loop through the enemy children
+                for (int j = Const.CHILD_COUNT; j < Const.CHILD_COUNT * 2; j++) {
                     Child enemyChild = world.getChildArray()[j];
 
                     if (weCanSeeTheEnemy(enemyChild) &&
@@ -70,6 +123,26 @@ public class HunterChild extends Child {
                         }
                     }
                 }
+
+//                Loop through enemy snowman nearby
+                for (int snowmanX = pos.x - 3; snowmanX <= pos.x + 3; snowmanX++)
+                    for (int snowmanY = pos.y - 3; snowmanY <= pos.y + 3; snowmanY++) {
+                        if (locationWithinBounds(snowmanX, snowmanY) &&
+                                notCurrentLocation(snowmanX, snowmanY) &&
+                                world.getGround()[snowmanX][snowmanY] == Const.GROUND_SMB &&
+                                clearShotTowards(new Point(snowmanX, snowmanY), Const.GROUND_SMB)
+                        ) {
+                            int deltaX = snowmanX - pos.x;
+                            int deltaY = snowmanY - pos.y;
+
+                            String snowmanKey = String.format("%s,%s", deltaX, deltaY);
+                            Point relativeTarget = targetEnemySnowmanMap.get(snowmanKey);
+                            Point actualTarget = new Point(pos.x + relativeTarget.x, pos.y + relativeTarget.y);
+
+                            System.err.printf("Snowman key: %s, relative value %s actual throw location %n",snowmanKey, relativeTarget, actualTarget);
+                            return new Move("throw", actualTarget);
+                        }
+                    }
             }
         } else {
             // Crush into a snowball, if we have snow.
@@ -128,9 +201,7 @@ public class HunterChild extends Child {
                 int groundAtSnowball = world.getGround()[snowballX][snowballY];
 
                 System.err.printf("Step %d, snowballHeight: %d, Item at ground[%d][%d] is %d %n", i, heightAtStep, snowballX, snowballY, groundAtSnowball);
-                if (groundAtSnowball==Const.GROUND_TREE) {
-                    return false;
-                } else if(groundAtSnowball==Const.GROUND_CHILD_RED){
+                if (groundAtSnowball==Const.GROUND_TREE || groundAtSnowball == Const.GROUND_CHILD_RED || groundAtSnowball == Const.GROUND_SMR) {
                     return false;
                 } else if(groundAtSnowball==target){
                     return true;
