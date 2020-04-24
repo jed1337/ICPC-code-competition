@@ -1,6 +1,9 @@
 import java.awt.*;
 import java.util.Random;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.max;
+
 public class HunterChild extends Child {
     /** Source of randomness for this player. */
     static Random rnd = new Random();
@@ -24,8 +27,6 @@ public class HunterChild extends Child {
         }
 
         System.err.printf("Our location: %s, holding %s, turnsDazed %s, isStanding %s, %n", pos, holding, turnsDazed, standing);
-
-//        Move move = new Move();
 
         // See if the child needs a new destination.
         while (runTimer <= 0 || runTarget.equals(pos)) {
@@ -51,7 +52,8 @@ public class HunterChild extends Child {
                     if (weCanSeeTheEnemy(enemyChild) &&
                             enemyChild.standing &&
                             enemyChild.turnsDazed == 0 &&
-                            withinThrowingDistance(enemyChild)
+                            withinThrowingDistance(enemyChild) &&
+                            clearShotTowards(enemyChild.pos, Const.GROUND_CHILD_BLUE)
                     ) {
                         System.err.printf("Enemy child location: %s, holding %s, turnsDazed %s, isStanding %s, %n", enemyChild.pos, enemyChild.holding, enemyChild.turnsDazed, enemyChild.standing);
 
@@ -103,6 +105,53 @@ public class HunterChild extends Child {
 
         runTimer--;
         return moveToward(runTarget);
+    }
+
+    private boolean clearShotTowards(Point targetLocation, int target) {
+        int steps = max(abs(pos.x- targetLocation.x), abs(pos.y-targetLocation.y));
+        int startSnowballHeight = getSnowballHeight(this);
+
+        System.err.println("Target = "+targetLocation);
+        for (int i = 1; i <= steps; i++) {
+            int heightAtStep = startSnowballHeight - round(
+                    ((double) (9 * i)) / (6)
+            );
+            int snowballX = pos.x + round(
+                    ((double) i*(targetLocation.x-pos.x)) / ((double) steps)
+            );
+
+            int snowballY = pos.y + round(
+                    ((double) i*(targetLocation.y-pos.y)) / ((double) steps)
+            );
+
+            if(locationWithinBounds(snowballX, snowballY) ){
+                int groundAtSnowball = world.getGround()[snowballX][snowballY];
+
+                System.err.printf("Step %d, snowballHeight: %d, Item at ground[%d][%d] is %d %n", i, heightAtStep, snowballX, snowballY, groundAtSnowball);
+                if (groundAtSnowball==Const.GROUND_TREE) {
+                    return false;
+                } else if(groundAtSnowball==Const.GROUND_CHILD_RED){
+                    return false;
+                } else if(groundAtSnowball==target){
+                    return true;
+                }
+            } else{
+                System.err.printf("Step %d, snowballHeight: %d, Out of bounds at ground[%d][%d] %n", i, heightAtStep, snowballX, snowballY);
+            }
+        }
+        return true;
+    }
+
+    public static int round( double x ) {
+        if ( x < 0 ) {
+            return -(int)(Math.round( -x ));
+        }
+
+        return (int)(Math.round( x ));
+    }
+
+    private int getSnowballHeight(Child child) {
+        return child.standing ? 9 : 6;
     }
 
     private boolean weCanSeeTheEnemy(Child enemyChild) {

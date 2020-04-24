@@ -26,7 +26,7 @@ public class OriginalHunterChild extends Child {
         Move move = new Move();
 
         // See if the child needs a new destination.
-        while (runTimer <= 0 || runTarget.equals(pos)) {
+        while (runTimer <= 0 ) {
             runTarget.setLocation(
                     rnd.nextInt(Const.MAP_SIZE),
                     rnd.nextInt(Const.MAP_SIZE)
