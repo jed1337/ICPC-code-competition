@@ -2,24 +2,16 @@ import java.awt.*;
 import java.util.Random;
 
 public class SnowmanStealerByPickup extends Child {
-    /**
-     * Source of randomness for this player.
-     */
+    /** Source of randomness for this player. */
     static Random rnd = new Random();
 
-    /**
-     * Current instruction this child is executing.
-     */
+    /** Current instruction this child is executing. */
     int state = 0;
 
-    /**
-     * Current destination of this child.
-     */
+    /** Current destination of this child. */
     Point runTarget = new Point();
 
-    /**
-     * How many more turns is this child going to run toward the target.
-     */
+    /** How many more turns is this child going to run toward the target. */
     int runTimer = 0;
 
     public SnowmanStealerByPickup(AbstractWorld world) {
@@ -36,7 +28,7 @@ public class SnowmanStealerByPickup extends Child {
         if (holding != Const.HOLD_S1 && holding != Const.HOLD_S2 && holding != Const.HOLD_S3) {
             return acquireSmallSnowball();
         } else {
-            return finishNearbySnowmanOrStandOrMoveRandomly();
+            return actionWithSnowball();
         }
     }
 
@@ -44,58 +36,71 @@ public class SnowmanStealerByPickup extends Child {
         if (holding == Const.HOLD_P1) {
             return new Move("crush");
         } else {
-            if (!standing) {
-//                If crouching next to a blue snowman
-                Point blueSnowman = lookNextToMeFor(Const.GROUND_SMB);
-                if (blueSnowman != null) {
-                    System.err.println("Pickup blue snowman");
-                    return pickupIfNoConflict(blueSnowman);
-                }
-                System.err.println("Stand line " + getLineNumber());
+            Point blueSnowmanNearby = lookNextToMeFor(Const.GROUND_SMB);
+            Point almostSnowmanNearby = lookNextToMeFor(Const.GROUND_LM);
+
+//          If crouching next to a blue snowman
+            if (!standing && blueSnowmanNearby != null) {
+                System.err.println("Pickup blue snowman");
+                return pickupIfNoConflict(blueSnowmanNearby);
+            } else if(standing && blueSnowmanNearby != null ) {
+                System.err.println("Crouch if next to blue snowman line " + getLineNumber());
+                return new Move("crouch");
+            } else if(!standing && almostSnowmanNearby == null){
                 return new Move("stand");
-            } else {
-                Point blueSnowmanNextToMe = lookNextToMeFor(Const.GROUND_SMB);
-//                If next to a blue snowman
-                if (blueSnowmanNextToMe != null) {
-                    System.err.println("Crouch if next to blue snowman line " + getLineNumber());
-                    return new Move("crouch");
-                } else {
+            }
+            else{
+                if (almostSnowmanNearby != null){
+                    System.err.println("Next to almost snowman");
+
+                    Move gottenSnow = getSnowNearby();
+                    if (gottenSnow != null) {
+                        return gottenSnow;
+                    } else{
+                        System.err.println("No snow to pickups");
+                        return new Move();
+                    }
+                }
+                else {
                     runTimer--;
 
-//                    Go to nearest blue snowman, else, go to somewhere random
+//                    Go to nearest blue snowman or almost snowman, else, go to somewhere random
                     if (runTimer <= 0) {
-                        int closestBlueSnowmanX = Integer.MAX_VALUE;
-                        int closestBlueSnowmanY = Integer.MAX_VALUE;
-                        int closestBlueSnowmanPoint = Integer.MAX_VALUE;
-                        boolean hasBlueSnowman = false;
+                        int closestSnowmanX = Integer.MAX_VALUE;
+                        int closestSnowmanY = Integer.MAX_VALUE;
+                        int closestSnowmanPoint = Integer.MAX_VALUE;
+                        boolean hasSnowman = false;
 
                         for (int snowmanX = 0; snowmanX < Const.MAP_SIZE; snowmanX++) {
                             for (int snowmanY = 0; snowmanY < Const.MAP_SIZE; snowmanY++) {
 
-                                if (earlierChildrenWillGoToTheSnowman(snowmanX, snowmanY)) {
+                                if (earlierChildWillGoToTheSnowman(snowmanX, snowmanY)) {
+                                    System.err.println("Continue");
                                     continue;
                                 }
 
-                                if (world.getGround()[snowmanX][snowmanY] == Const.GROUND_SMB) {
-
+                                int currentGround = world.getGround()[snowmanX][snowmanY];
+                                if (currentGround == Const.GROUND_SMB || currentGround == Const.GROUND_LM) {
+                                    System.err.println("Almost snowman");
                                     int deltaX = snowmanX - pos.x;
                                     int deltaY = snowmanY - pos.y;
                                     int deltaSquare = deltaX * deltaX + deltaY * deltaY;
 
-                                    hasBlueSnowman = true;
+                                    hasSnowman = true;
 
-                                    if (deltaSquare < closestBlueSnowmanPoint) {
-                                        closestBlueSnowmanX = snowmanX;
-                                        closestBlueSnowmanY = snowmanY;
-                                        closestBlueSnowmanPoint = deltaSquare;
+                                    // TODO: 4/25/2020 Only go there if there's a clear path
+                                    if (deltaSquare < closestSnowmanPoint) {
+                                        closestSnowmanX = snowmanX;
+                                        closestSnowmanY = snowmanY;
+                                        closestSnowmanPoint = deltaSquare;
                                     }
 
                                 }
                             }
                         }
-                        if (hasBlueSnowman) {
-//                            moveToward(new Point(closestBlueSnowmanX, closestBlueSnowmanY));
-                            runTarget.setLocation(new Point(closestBlueSnowmanX, closestBlueSnowmanY));
+                        if (hasSnowman) {
+//                            moveToward(new Point(closestSnowmanX, closestSnowmanY));
+                            runTarget.setLocation(new Point(closestSnowmanX, closestSnowmanY));
                             runTimer = 5;
                         } else {
                             System.err.println("Run timer "+runTimer+" reset to 5");
@@ -127,7 +132,7 @@ public class SnowmanStealerByPickup extends Child {
         return new Move("pickup", pickupLocation);
     }
 
-    protected boolean earlierChildrenWillGoToTheSnowman(int snowmanX, int snowmanY) {
+    protected boolean earlierChildWillGoToTheSnowman(int snowmanX, int snowmanY) {
         for (int i = 0; i < childNumber; i++) {
             Point earlierChildMove = childArray[i].lastMove.dest;
 
@@ -146,7 +151,7 @@ public class SnowmanStealerByPickup extends Child {
         return deltaX * deltaX + deltaY * deltaY;
     }
 
-    protected Move finishNearbySnowmanOrStandOrMoveRandomly() {
+    protected Move actionWithSnowball() {
         Point almostSnowmanLocation = lookNextToMeFor(Const.GROUND_LM);
         if (almostSnowmanLocation != null) {
             return new Move("drop", almostSnowmanLocation);

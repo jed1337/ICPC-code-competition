@@ -261,4 +261,31 @@ public class Child {
             return new Point(pos.x + crouchingMovementPossibility.x, pos.y + crouchingMovementPossibility.y);
         }
     }
+
+    Move getSnowNearby() {
+        int snowX = -1;
+        int snowY = -1;
+        for (int ox = pos.x - 1; ox <= pos.x + 1; ox++)
+            for (int oy = pos.y - 1; oy <= pos.y + 1; oy++) {
+                // Is there snow to pick up?
+                if (ox >= 0 && ox < Const.MAP_SIZE &&
+                        oy >= 0 && oy < Const.MAP_SIZE &&
+                        (ox != pos.x || oy != pos.y) &&
+                        world.getGround()[ox][oy] == Const.GROUND_EMPTY &&
+                        world.getSnowHeight()[ox][oy] > 0) {
+                    snowX = ox;
+                    snowY = oy;
+                }
+            }
+
+        // If there is snow, try to get it.
+        if (snowX >= 0) {
+            if (standing) {
+                return new Move("crouch");
+            } else {
+                return new Move("pickup", new Point(snowX, snowY));
+            }
+        }
+        return null;
+    }
 }

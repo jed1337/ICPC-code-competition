@@ -106,7 +106,7 @@ public class HunterChild extends Child {
                             enemyChild.standing &&
                             enemyChild.turnsDazed == 0 &&
                             withinThrowingDistance(enemyChild) &&
-                            clearShotTowards(enemyChild.pos, Const.GROUND_CHILD_BLUE)
+                            clearPathTowards(enemyChild.pos, Const.GROUND_CHILD_BLUE)
                     ) {
                         System.err.printf("Enemy child location: %s, holding %s, turnsDazed %s, isStanding %s, %n", enemyChild.pos, enemyChild.holding, enemyChild.turnsDazed, enemyChild.standing);
 
@@ -130,7 +130,7 @@ public class HunterChild extends Child {
                         if (locationWithinBounds(snowmanX, snowmanY) &&
                                 notCurrentLocation(snowmanX, snowmanY) &&
                                 world.getGround()[snowmanX][snowmanY] == Const.GROUND_SMB &&
-                                clearShotTowards(new Point(snowmanX, snowmanY), Const.GROUND_SMB)
+                                clearPathTowards(new Point(snowmanX, snowmanY), Const.GROUND_SMB)
                         ) {
                             int deltaX = snowmanX - pos.x;
                             int deltaY = snowmanY - pos.y;
@@ -150,28 +150,9 @@ public class HunterChild extends Child {
                 return new Move("crush");
             } else {
                 // We don't have snow, see if there is some nearby.
-                int snowX = -1;
-                int snowY = -1;
-                for (int ox = pos.x - 1; ox <= pos.x + 1; ox++)
-                    for (int oy = pos.y - 1; oy <= pos.y + 1; oy++) {
-                        // Is there snow to pick up?
-                        if (ox >= 0 && ox < Const.MAP_SIZE &&
-                                oy >= 0 && oy < Const.MAP_SIZE &&
-                                (ox != pos.x || oy != pos.y) &&
-                                world.getGround()[ox][oy] == Const.GROUND_EMPTY &&
-                                world.getSnowHeight()[ox][oy] > 0) {
-                            snowX = ox;
-                            snowY = oy;
-                        }
-                    }
-
-                // If there is snow, try to get it.
-                if (snowX >= 0) {
-                    if (standing) {
-                        return new Move("crouch");
-                    } else {
-                        return new Move("pickup", new Point(snowX, snowY));
-                    }
+                Move gottenSnow = getSnowNearby();
+                if (gottenSnow != null) {
+                    return gottenSnow;
                 }
             }
         }
@@ -180,7 +161,7 @@ public class HunterChild extends Child {
         return moveToward(runTarget);
     }
 
-    private boolean clearShotTowards(Point targetLocation, int target) {
+    private boolean clearPathTowards(Point targetLocation, int target) {
         int steps = max(abs(pos.x- targetLocation.x), abs(pos.y-targetLocation.y));
         int startSnowballHeight = getSnowballHeight(this);
 
