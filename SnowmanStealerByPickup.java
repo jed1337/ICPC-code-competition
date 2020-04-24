@@ -158,6 +158,16 @@ public class SnowmanStealerByPickup extends Child {
         } else if(!standing){
             return new Move("stand");
         } else{
+            Move actionWhenWeSeeAnEnemy = getActionWhenWeSeeAnEnemy();
+            if (actionWhenWeSeeAnEnemy != null) {
+                return actionWhenWeSeeAnEnemy;
+            }
+
+            Move actionWhenCloseToAnEnemySnowman = getActionWhenCloseToAnEnemySnowman();
+            if (actionWhenCloseToAnEnemySnowman != null) {
+                return actionWhenCloseToAnEnemySnowman;
+            }
+
             System.err.println("Random movement line " + getLineNumber());
             return validRandomMovement();
         }

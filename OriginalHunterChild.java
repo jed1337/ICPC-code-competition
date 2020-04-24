@@ -78,7 +78,7 @@ public class OriginalHunterChild extends Child {
                     Child enemyChild = world.getChildArray()[j];
 
 //                    If we can see the enemy child
-                    if (enemyChild.pos.x >= 0) {
+                    if (weCanSeeTheEnemy(enemyChild)) {
 //                        System.err.printf("Enemy child location: %s, holding %s, turnsDazed %s, isStanding %s, %n", enemyChild.pos, enemyChild.holding, enemyChild.turnsDazed, enemyChild.standing);
 
                         int deltaX = enemyChild.pos.x - pos.x;
