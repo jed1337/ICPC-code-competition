@@ -13,8 +13,8 @@ public class World extends AbstractWorld{
     public void run() {
         childArray[0] = new HunterChild(this).setName("A").setChildArray(childArray).setChildNumber(0);
         childArray[1] = new HunterChild(this).setName("B").setChildArray(childArray).setChildNumber(1);
-        childArray[2] = new HunterChild(this).setName("C").setChildArray(childArray).setChildNumber(2);
-        childArray[3] = new HunterChild(this).setName("D").setChildArray(childArray).setChildNumber(3);
+        childArray[2] = new SnowmanStealerByPickup(this).setName("C").setChildArray(childArray).setChildNumber(2);
+        childArray[3] = new CustomChild(this).setName("D").setChildArray(childArray).setChildNumber(3);
 
         for (int i = Const.CHILD_COUNT; i < childArray.length; i++) {
             childArray[i] = new Child(this);
@@ -121,6 +121,7 @@ public class World extends AbstractWorld{
     private void decideAction() {
         for (int i = 0; i < Const.CHILD_COUNT; i++) {
             Child currentChild = childArray[i];
+            resetLastAttackTargetLocation(currentChild);
             Move m = currentChild.chooseMove();
 //            if (m.action.equals("idle")){
 //                System.err.printf("Child %s at %s given move is idle %n", currentChild.name, m.dest);
@@ -149,6 +150,10 @@ public class World extends AbstractWorld{
                 System.out.println(m.action + " " + m.dest.x + " " + m.dest.y);
             }
         }
+    }
+
+    private void resetLastAttackTargetLocation(Child currentChild) {
+        currentChild.setLastAttackTargetLocation(null);
     }
 
     public static void main(String[] args) {

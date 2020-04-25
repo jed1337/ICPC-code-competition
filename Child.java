@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
@@ -57,7 +58,6 @@ public class Child {
         targetEnemySnowmanMap.put("-4,3", new Point(-12,9));
         targetEnemySnowmanMap.put("-4,4", new Point(-12,12));
         targetEnemySnowmanMap.put("-4,5", new Point(-12,14));
-        targetEnemySnowmanMap.put("-5,-0", new Point(-14,-0));
         targetEnemySnowmanMap.put("-5,-1", new Point(-14,-3));
         targetEnemySnowmanMap.put("-5,-2", new Point(-14,-6));
         targetEnemySnowmanMap.put("-5,-3", new Point(-14,-9));
@@ -72,6 +72,7 @@ public class Child {
         targetEnemySnowmanMap.put("0,-1", new Point(0,-3));
         targetEnemySnowmanMap.put("0,-2", new Point(0,-6));
         targetEnemySnowmanMap.put("0,-3", new Point(0,-9));
+        targetEnemySnowmanMap.put("0,-4", new Point(0,12));
         targetEnemySnowmanMap.put("0,-5", new Point(0,-14));
         targetEnemySnowmanMap.put("0,1", new Point(0,3));
         targetEnemySnowmanMap.put("0,2", new Point(0,6));
@@ -122,7 +123,6 @@ public class Child {
         targetEnemySnowmanMap.put("4,3", new Point(12,9));
         targetEnemySnowmanMap.put("4,4", new Point(12,12));
         targetEnemySnowmanMap.put("4,5", new Point(12,14));
-        targetEnemySnowmanMap.put("5,-0", new Point(14,-0));
         targetEnemySnowmanMap.put("5,-1", new Point(14,-3));
         targetEnemySnowmanMap.put("5,-2", new Point(14,-6));
         targetEnemySnowmanMap.put("5,-3", new Point(14,-9));
@@ -198,6 +198,8 @@ public class Child {
     protected Child[] childArray;
 
     protected Move lastMove = new Move();
+
+    private Point lastAttackTargetLocation;
 
     /**
      * We pass the World so that we have access to the game variables
@@ -320,6 +322,10 @@ public class Child {
     public Child setLastMove(Move lastMove) {
         this.lastMove = lastMove;
         return this;
+    }
+
+    public void setLastAttackTargetLocation(Point lastAttackTargetLocation) {
+        this.lastAttackTargetLocation = lastAttackTargetLocation;
     }
 
     protected Move validRandomMovement() {
@@ -448,7 +454,7 @@ public class Child {
             if(locationWithinBounds(snowballX, snowballY) ){
                 int groundAtSnowball = world.getGround()[snowballX][snowballY];
 
-                System.err.printf("Step %d, snowballHeight: %d, Item at ground[%d][%d] is %d %n", i, heightAtStep, snowballX, snowballY, groundAtSnowball);
+//                System.err.printf("Step %d, snowballHeight: %d, Item at ground[%d][%d] is %d %n", i, heightAtStep, snowballX, snowballY, groundAtSnowball);
                 if (groundAtSnowball==Const.GROUND_TREE || groundAtSnowball == Const.GROUND_CHILD_RED || groundAtSnowball == Const.GROUND_SMR) {
                     return false;
                 } else if(groundAtSnowball==target){
@@ -487,7 +493,8 @@ public class Child {
                     enemyChild.standing &&
                     enemyChild.turnsDazed == 0 &&
                     withinThrowingDistance(enemyChild) &&
-                    clearPathTowards(enemyChild.pos, Const.GROUND_CHILD_BLUE)
+                    clearPathTowards(enemyChild.pos, Const.GROUND_CHILD_BLUE) &&
+                    !previousChildIsGoingToHit(enemyChild.pos)
             ) {
                 System.err.printf("Enemy child location: %s, holding %s, turnsDazed %s, isStanding %s, %n", enemyChild.pos, enemyChild.holding, enemyChild.turnsDazed, enemyChild.standing);
 
@@ -496,6 +503,8 @@ public class Child {
                 } else {
                     int deltaX = enemyChild.pos.x - pos.x;
                     int deltaY = enemyChild.pos.y - pos.y;
+
+                    lastAttackTargetLocation = enemyChild.pos;
 
                     return new Move("throw", new Point(
                             pos.x + deltaX * 2,
@@ -507,16 +516,32 @@ public class Child {
         return null;
     }
 
+    private boolean previousChildIsGoingToHit(Point target) {
+        for (int i = 0; i < childNumber; i++) {
+            Child previousChild = childArray[i];
+            if (Objects.equals(previousChild.lastAttackTargetLocation, target)) {
+                System.err.println("Previous child is gonna hit "+ target);
+                return true;
+            }
+        }
+        return false;
+    }
+
     Move getActionWhenCloseToAnEnemySnowman() {
         for (int snowmanX = pos.x - 5; snowmanX <= pos.x + 5; snowmanX++)
             for (int snowmanY = pos.y - 5; snowmanY <= pos.y + 5; snowmanY++) {
+                Point enemySnowmanLocation = new Point(snowmanX, snowmanY);
+
                 if (locationWithinBounds(snowmanX, snowmanY) &&
                         notCurrentLocation(snowmanX, snowmanY) &&
                         world.getGround()[snowmanX][snowmanY] == Const.GROUND_SMB &&
-                        clearPathTowards(new Point(snowmanX, snowmanY), Const.GROUND_SMB)
+                        clearPathTowards(enemySnowmanLocation, Const.GROUND_SMB) &&
+                        !previousChildIsGoingToHit(enemySnowmanLocation)
                 ) {
                     int deltaX = snowmanX - pos.x;
                     int deltaY = snowmanY - pos.y;
+
+                    lastAttackTargetLocation = enemySnowmanLocation;
 
                     String snowmanKey = String.format("%s,%s", deltaX, deltaY);
                     System.err.printf("SnowmanKey %s %n", snowmanKey);

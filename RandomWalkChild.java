@@ -7,7 +7,7 @@ public class RandomWalkChild extends Child {
     static Random rnd = new Random();
 
 
-    public RandomWalkChild(World world) {
+    public RandomWalkChild(AbstractWorld world) {
         super(world);
     }
 
@@ -16,18 +16,12 @@ public class RandomWalkChild extends Child {
             return new Move();
         }
 
-        while (runTimer <= 0 ||
-                runTarget.equals(pos)) {
+        while (runTimer <= 0) {
 //             Pick somewhere to run, omit the top and righmost edges.
             runTarget.setLocation(
-                    rnd.nextInt(Const.MAP_SIZE - 1),
-                    rnd.nextInt(Const.MAP_SIZE - 1)
+                    20,
+                    20
             );
-//
-//            runTarget.setLocation(
-//                    24,
-//                    24
-//            );
             runTimer = 1 + rnd.nextInt(14);
         }
 

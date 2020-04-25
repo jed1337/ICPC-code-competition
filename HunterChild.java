@@ -45,10 +45,10 @@ public class HunterChild extends Child {
                 return new Move("stand");
             } else {
 
-                Move actionWhenWeSeeAnEnemy = getActionWhenWeSeeAnEnemy();
-                if (actionWhenWeSeeAnEnemy != null) {
-                    return actionWhenWeSeeAnEnemy;
-                }
+//                Move actionWhenWeSeeAnEnemy = getActionWhenWeSeeAnEnemy();
+//                if (actionWhenWeSeeAnEnemy != null) {
+//                    return actionWhenWeSeeAnEnemy;
+//                }
 
                 Move actionWhenCloseToAnEnemySnowman = getActionWhenCloseToAnEnemySnowman();
                 if (actionWhenCloseToAnEnemySnowman != null) {
