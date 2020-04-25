@@ -16,51 +16,124 @@ public class Child {
         targetEnemySnowmanMap.put("-1,-1", new Point(-3,-3));
         targetEnemySnowmanMap.put("-1,-2", new Point(-3,-6));
         targetEnemySnowmanMap.put("-1,-3", new Point(-3,-9));
+        targetEnemySnowmanMap.put("-1,-4", new Point(-3,-12));
+        targetEnemySnowmanMap.put("-1,-5", new Point(-3,-14));
         targetEnemySnowmanMap.put("-1,0", new Point(-3,0));
         targetEnemySnowmanMap.put("-1,1", new Point(-3,3));
         targetEnemySnowmanMap.put("-1,2", new Point(-3,6));
         targetEnemySnowmanMap.put("-1,3", new Point(-3,9));
+        targetEnemySnowmanMap.put("-1,4", new Point(-3,12));
+        targetEnemySnowmanMap.put("-1,5", new Point(-3,14));
         targetEnemySnowmanMap.put("-2,-1", new Point(-6,-3));
         targetEnemySnowmanMap.put("-2,-2", new Point(-6,-6));
         targetEnemySnowmanMap.put("-2,-3", new Point(-6,-9));
+        targetEnemySnowmanMap.put("-2,-4", new Point(-6,-12));
+        targetEnemySnowmanMap.put("-2,-5", new Point(-6,-14));
         targetEnemySnowmanMap.put("-2,0", new Point(-6,0));
         targetEnemySnowmanMap.put("-2,1", new Point(-6,3));
         targetEnemySnowmanMap.put("-2,2", new Point(-6,6));
         targetEnemySnowmanMap.put("-2,3", new Point(-6,9));
+        targetEnemySnowmanMap.put("-2,4", new Point(-6,12));
+        targetEnemySnowmanMap.put("-2,5", new Point(-6,14));
         targetEnemySnowmanMap.put("-3,-1", new Point(-9,-3));
         targetEnemySnowmanMap.put("-3,-2", new Point(-9,-6));
         targetEnemySnowmanMap.put("-3,-3", new Point(-9,-9));
+        targetEnemySnowmanMap.put("-3,-4", new Point(-9,-12));
+        targetEnemySnowmanMap.put("-3,-5", new Point(-9,-14));
         targetEnemySnowmanMap.put("-3,0", new Point(-9,0));
         targetEnemySnowmanMap.put("-3,1", new Point(-9,3));
         targetEnemySnowmanMap.put("-3,2", new Point(-9,6));
         targetEnemySnowmanMap.put("-3,3", new Point(-9,9));
+        targetEnemySnowmanMap.put("-3,4", new Point(-9,12));
+        targetEnemySnowmanMap.put("-3,5", new Point(-9,14));
+        targetEnemySnowmanMap.put("-4,-1", new Point(-12,-3));
+        targetEnemySnowmanMap.put("-4,-2", new Point(-12,-6));
+        targetEnemySnowmanMap.put("-4,-3", new Point(-12,-9));
+        targetEnemySnowmanMap.put("-4,-4", new Point(-12,-12));
+        targetEnemySnowmanMap.put("-4,-5", new Point(-12,-14));
+        targetEnemySnowmanMap.put("-4,0", new Point(-12,0));
+        targetEnemySnowmanMap.put("-4,1", new Point(-12,3));
+        targetEnemySnowmanMap.put("-4,2", new Point(-12,6));
+        targetEnemySnowmanMap.put("-4,3", new Point(-12,9));
+        targetEnemySnowmanMap.put("-4,4", new Point(-12,12));
+        targetEnemySnowmanMap.put("-4,5", new Point(-12,14));
+        targetEnemySnowmanMap.put("-5,-0", new Point(-14,-0));
+        targetEnemySnowmanMap.put("-5,-1", new Point(-14,-3));
+        targetEnemySnowmanMap.put("-5,-2", new Point(-14,-6));
+        targetEnemySnowmanMap.put("-5,-3", new Point(-14,-9));
+        targetEnemySnowmanMap.put("-5,-4", new Point(-14,-12));
+        targetEnemySnowmanMap.put("-5,-5", new Point(-14,-14));
+        targetEnemySnowmanMap.put("-5,0", new Point(-14,0));
+        targetEnemySnowmanMap.put("-5,1", new Point(-14,3));
+        targetEnemySnowmanMap.put("-5,2", new Point(-14,6));
+        targetEnemySnowmanMap.put("-5,3", new Point(-14,9));
+        targetEnemySnowmanMap.put("-5,4", new Point(-14,12));
+        targetEnemySnowmanMap.put("-5,5", new Point(-14,14));
         targetEnemySnowmanMap.put("0,-1", new Point(0,-3));
         targetEnemySnowmanMap.put("0,-2", new Point(0,-6));
         targetEnemySnowmanMap.put("0,-3", new Point(0,-9));
+        targetEnemySnowmanMap.put("0,-5", new Point(0,-14));
         targetEnemySnowmanMap.put("0,1", new Point(0,3));
         targetEnemySnowmanMap.put("0,2", new Point(0,6));
         targetEnemySnowmanMap.put("0,3", new Point(0,9));
+        targetEnemySnowmanMap.put("0,4", new Point(0,12));
+        targetEnemySnowmanMap.put("0,5", new Point(0,14));
         targetEnemySnowmanMap.put("1,-1", new Point(3,-3));
         targetEnemySnowmanMap.put("1,-2", new Point(3,-6));
         targetEnemySnowmanMap.put("1,-3", new Point(3,-9));
+        targetEnemySnowmanMap.put("1,-4", new Point(3,-12));
+        targetEnemySnowmanMap.put("1,-5", new Point(3,-14));
         targetEnemySnowmanMap.put("1,0", new Point(3,0));
         targetEnemySnowmanMap.put("1,1", new Point(3,3));
         targetEnemySnowmanMap.put("1,2", new Point(3,6));
         targetEnemySnowmanMap.put("1,3", new Point(3,9));
+        targetEnemySnowmanMap.put("1,4", new Point(3,12));
+        targetEnemySnowmanMap.put("1,5", new Point(3,14));
         targetEnemySnowmanMap.put("2,-1", new Point(6,-3));
         targetEnemySnowmanMap.put("2,-2", new Point(6,-6));
         targetEnemySnowmanMap.put("2,-3", new Point(6,-9));
+        targetEnemySnowmanMap.put("2,-4", new Point(6,-12));
+        targetEnemySnowmanMap.put("2,-5", new Point(6,-14));
         targetEnemySnowmanMap.put("2,0", new Point(6,0));
         targetEnemySnowmanMap.put("2,1", new Point(6,3));
         targetEnemySnowmanMap.put("2,2", new Point(6,6));
         targetEnemySnowmanMap.put("2,3", new Point(6,9));
+        targetEnemySnowmanMap.put("2,4", new Point(6,12));
+        targetEnemySnowmanMap.put("2,5", new Point(6,14));
         targetEnemySnowmanMap.put("3,-1", new Point(9,-3));
         targetEnemySnowmanMap.put("3,-2", new Point(9,-6));
         targetEnemySnowmanMap.put("3,-3", new Point(9,-9));
+        targetEnemySnowmanMap.put("3,-4", new Point(9,-12));
+        targetEnemySnowmanMap.put("3,-5", new Point(9,-14));
         targetEnemySnowmanMap.put("3,0", new Point(9,0));
         targetEnemySnowmanMap.put("3,1", new Point(9,3));
         targetEnemySnowmanMap.put("3,2", new Point(9,6));
         targetEnemySnowmanMap.put("3,3", new Point(9,9));
+        targetEnemySnowmanMap.put("3,4", new Point(9,12));
+        targetEnemySnowmanMap.put("3,5", new Point(9,14));
+        targetEnemySnowmanMap.put("4,-1", new Point(12,-3));
+        targetEnemySnowmanMap.put("4,-2", new Point(12,-6));
+        targetEnemySnowmanMap.put("4,-3", new Point(12,-9));
+        targetEnemySnowmanMap.put("4,-4", new Point(12,-12));
+        targetEnemySnowmanMap.put("4,-5", new Point(12,-14));
+        targetEnemySnowmanMap.put("4,0", new Point(12,0));
+        targetEnemySnowmanMap.put("4,1", new Point(12,3));
+        targetEnemySnowmanMap.put("4,2", new Point(12,6));
+        targetEnemySnowmanMap.put("4,3", new Point(12,9));
+        targetEnemySnowmanMap.put("4,4", new Point(12,12));
+        targetEnemySnowmanMap.put("4,5", new Point(12,14));
+        targetEnemySnowmanMap.put("5,-0", new Point(14,-0));
+        targetEnemySnowmanMap.put("5,-1", new Point(14,-3));
+        targetEnemySnowmanMap.put("5,-2", new Point(14,-6));
+        targetEnemySnowmanMap.put("5,-3", new Point(14,-9));
+        targetEnemySnowmanMap.put("5,-4", new Point(14,-12));
+        targetEnemySnowmanMap.put("5,-5", new Point(14,-14));
+        targetEnemySnowmanMap.put("5,0", new Point(14,0));
+        targetEnemySnowmanMap.put("5,1", new Point(14,3));
+        targetEnemySnowmanMap.put("5,2", new Point(14,6));
+        targetEnemySnowmanMap.put("5,3", new Point(14,9));
+        targetEnemySnowmanMap.put("5,4", new Point(14,12));
+        targetEnemySnowmanMap.put("5,5", new Point(14,14));
     }
 
     protected final AbstractWorld world;
@@ -359,10 +432,10 @@ public class Child {
         int steps = max(abs(pos.x- targetLocation.x), abs(pos.y-targetLocation.y));
         int startSnowballHeight = standing ? 9 : 6;
 
-        System.err.println("Target = "+targetLocation);
+        System.err.printf("Current location: %s target: %s %n ", pos, target);
         for (int i = 1; i <= steps; i++) {
             int heightAtStep = startSnowballHeight - Child.round(
-                    ((double) (9 * i)) / (6)
+                    ((double) (9 * i)) / ((double) steps)//14
             );
             int snowballX = pos.x + Child.round(
                     ((double) i*(targetLocation.x-pos.x)) / ((double) steps)
@@ -435,8 +508,8 @@ public class Child {
     }
 
     Move getActionWhenCloseToAnEnemySnowman() {
-        for (int snowmanX = pos.x - 3; snowmanX <= pos.x + 3; snowmanX++)
-            for (int snowmanY = pos.y - 3; snowmanY <= pos.y + 3; snowmanY++) {
+        for (int snowmanX = pos.x - 5; snowmanX <= pos.x + 5; snowmanX++)
+            for (int snowmanY = pos.y - 5; snowmanY <= pos.y + 5; snowmanY++) {
                 if (locationWithinBounds(snowmanX, snowmanY) &&
                         notCurrentLocation(snowmanX, snowmanY) &&
                         world.getGround()[snowmanX][snowmanY] == Const.GROUND_SMB &&
@@ -446,6 +519,8 @@ public class Child {
                     int deltaY = snowmanY - pos.y;
 
                     String snowmanKey = String.format("%s,%s", deltaX, deltaY);
+                    System.err.printf("SnowmanKey %s %n", snowmanKey);
+
                     Point relativeTarget = targetEnemySnowmanMap.get(snowmanKey);
                     Point actualTarget = new Point(pos.x + relativeTarget.x, pos.y + relativeTarget.y);
 
